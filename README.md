@@ -13,5 +13,7 @@ CPSC 471 project for the Data Base Management Systems course at the University o
 * PHP
 
 ## Set Up
-1. Place the project file inside the web folder (www) of the web server
-2. Navigate to http://localhost/CPSC471-DatabaseProject/config/ and run the install.php file to setup the the database and tables
+1. Navigate to http://localhost/phpmyadmin/ and login
+2. Change password to 'root'
+3. Download and place the project file inside the web folder (www) of the web server
+4. Navigate to http://localhost/CPSC471-DatabaseProject/config/ and run the install.php file to setup the the database and tables
