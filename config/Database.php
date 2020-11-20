@@ -1,5 +1,11 @@
 <?php
 
+// This is for debugging and testing code. Shows all errors and warnings
+// So we don't have to go through the logs.
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 class Database {
 
     private $servername = 'localhost';
@@ -10,15 +16,16 @@ class Database {
 
     public function connect() {
 
+        // Navigate to the current directory and open sql script. (C:\AppServ\www\CPSC471-DatabaseProject\config)
         // Get the database name from the sql script.
         // Reads the first line which will contain the database name.
-        $f = fopen('database.sql', 'r');
+        $f = fopen(__DIR__ . "/database.sql", "r");
         $string = trim(fgets($f));
         fclose($f);
 
         $pieces = explode(' ', $string);
-        $database = array_pop($pieces);
-        $database = substr($database, 0, -1); // Takes everything but the last char. Remove ; from the string.
+        $this->database = array_pop($pieces);
+        $this->database = substr($this->database, 0, -1); // Takes everything but the last char. Remove ; from the string.
 
         $this->connection = null;
 
