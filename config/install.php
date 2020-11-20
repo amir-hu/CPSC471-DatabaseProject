@@ -1,7 +1,8 @@
 <?php
 
 // Execute the sql script to set up the database (one time).
-// Use  the  mysqli_query()  function to send the database script to the MySQL connection.
+// The first time we connect, we don't connect to any specific database
+// So we can set up the database and tables.
 
 $servername = 'localhost';
 $username = 'root';
