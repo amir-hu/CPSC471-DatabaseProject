@@ -24,8 +24,25 @@ class Daycare {
 
     }
 
-    public function read(){
+    public function read() {
 
+        // Create SQL query
+        $sql = 'SELECT
+                     DaycareName
+                   , DaycareAddress
+                   , TotalNumOfCaretakers
+                FROM ' . $this->table
+            . ' WHERE 1';
+
+        $stmt = $this->connection->prepare($sql);
+
+        if ($stmt->execute()) {
+            echo 'SQL query successfully executed.';
+        } else {
+            echo 'Error executing SQL query.';
+        }
+
+        return $stmt;
     }
 
     public function update(){
