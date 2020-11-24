@@ -41,13 +41,47 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once '../../config/Database.php'; // Bring in database
 include_once '../../models/Daycare.php'; // Bring in daycare
 
+// Check if any paramters were passed and return that.
+$daycareName = isset($_GET['DaycareName']) ? $_GET['DaycareName'] : die();
+$daycareAddress = isset($_GET['DaycareAddress']) ? $_GET['DaycareAddress'] : die();
+
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
 
-// Instantiate daycare entitiy
-$daycare = new Daycare($db);
+// SQL statement to call the stored proc
+// Positional paramaters. Act as placeholders.
+$sql = 'CALL SelectDaycare(:daycareName,:daycareAddress)';
 
+// Prepare for execution of stored procedure
+$stmt = $db->prepare($sql);
+
+// Bind values
+$stmt->bindParam(':daycareName', $daycareName);
+$stmt->bindParam(':daycareAddress', $daycareAddress);
+
+// Execute stored procedure
+$stmt->execute();
+
+// Returns all rows as an object
+$daycareRows = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+// Turn to JSON & output
+echo json_encode($daycareRows);
+
+$stmt->closeCursor();
+
+
+
+
+
+//$stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+
+// Instantiate daycare entitiy
+//$daycare = new Daycare($db);
+
+/*
 // Get Daycare records
 $stmt = $daycare->read();
 
@@ -56,6 +90,8 @@ $daycareRows = $stmt->fetchAll(PDO::FETCH_OBJ);
 
 // Turn to JSON & output
 echo json_encode($daycareRows);
+
+*/
 
 /*
 $data = array();
