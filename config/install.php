@@ -24,11 +24,29 @@ try {
 
 }
 
+// Create the database tables.
 $sql = file_get_contents(__DIR__ . '/database.sql');
 
 $stmt = $connection->prepare($sql);
 
 if ($stmt->execute()) echo 'Database and tables created successfully.';
 else echo 'install.php: Could not create database.';
+
+
+// Execture the create stored procedures script.
+$sql = file_get_contents(__DIR__ . '/databaseStoredProc.sql');
+
+// Error opening file.
+if(!$sql) {
+    $error = error_get_last();
+    echo "Error: " . $error['message'];
+
+}else {
+
+    $stmt = $connection->prepare($sql);
+
+    if ($stmt->execute()) echo 'Stored procedures created successfully.';
+    else echo 'install.php: Could not create stored procedures.';
+}
 
 ?>
