@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS PERSON (
    , Name VARCHAR(30)
    , Gender VARCHAR(30)
    , Address VARCHAR(50)
+   , StartDate Date
    , constraint pk_person PRIMARY KEY (SIN)
 );
 
@@ -79,7 +80,6 @@ CREATE TABLE EMPLOYEE (
 	DaycareAddress VARCHAR(100) NOT NULL,
 	SIN INT NOT NULL,
 	EMPLOYEEID INT NOT NULL,
-	StartDate DATE,
 	WORKHOURS VARCHAR(100),
 	CONSTRAINT PK_EMPLOYEE PRIMARY KEY (DAYCARENAME, DAYCAREADDRESS, SIN, EMPLOYEEID),
 	CONSTRAINT DAYCARENAME FOREIGN KEY (DAYCARENAME) REFERENCES DAYCARE (DAYCARENAME),
@@ -167,9 +167,38 @@ CREATE TABLE ACTIVITIES (
 
 
 
-INSERT INTO PERSON VALUES (123456789, 'Erin', 'Female', '123 Calgary Drive'),(111222333, 'Joe Fresh', 'Male','Also Clagary Dr'), (111111111, 'First Child', 'Female', 'Home address'), (111111112, 'Child Parent', 'Male', 'Home address');
+INSERT INTO PERSON VALUES (123456789, 'Erin Employee', 'Female', '123 Calgary Drive',TODATE('2003/07/09', 'yyyy/mm/dd')),(111222333, 'Joe Fresh', 'Male','Also Clagary Dr',TODATE('2008/10/12', 'yyyy/mm/dd')), (111111111, 'First Child', 'Female', 'Home address',TODATE('2011/07/19', 'yyyy/mm/dd')), (111111112, 'Child Parent', 'Male', 'Home address',TODATE('2003/07/09', 'yyyy/mm/dd')), (999888777, 'Admin Lady', 'Female', 'The Daycare St',TODATE('2008/10/29','yyyy/mm/dd')), (555666777, 'A Child Person', 'Male', 'Also Clagary Dr', TODATE('2008/10/12', 'yyyy/mm/dd')), (444333222, 'Dr Employee', 'Male', 'The Mansion', TODATE('2010/10/10','yyyy/mm/dd'));
 
 
+INSERT INTO DAYCARE VALUES ('Daycare One', 'Daycare Street NW', 5), ('Daycare Two', 'Other Daycare Street', 30);
+
+INSERT INTO PERSON_PHONE VALUES (123456789, 4035551234), (123456789, 4035551223), (111222333, 4035556543), (111111112, 1234567890), (999888777,1233334444), (444333222, 4039999911);
+
+INSERT INTO PARENT_GUARDIAN VALUES (111222333, 5555, 12345), (111111112, 5550, 43434);
+
+INSERT INTO CHILD VALUES (111111111, 5555, 111222333, 1, TODATE('2005/10/12', 'yyyy/mm/dd')), (555666777, 5550, 111111112, 2, TODATE('2007/06/06','yyyy,mm,dd'));
+
+INSERT INTO CONDITION VALUES (111111111, 'Celiac Disease', 'Gluten Free Diet'), (111111111, 'Asthma', 'Inhaler'), (555666777, 'Asthma', 'Inhaler'), (555666777, 'OCD', 'Monitor Actions');
+
+INSERT INTO EMPLOYEE VALUES ('Daycare One', 'Daycare Street NW', 123456789, 5555, '9-5 M-F'), ('Daycare One', 'Daycare Street NW', 444333222, 5550, 'Weekends'), ('Daycare One', 'Daycare Street NW', 999888777, 1234, 'On Call');
+
+INSERT INTO CARETAKERS VALUES (123456789, 5555, 'Unavailable Sundays'), (444333222, 5550, 'Weekends');
+
+INSERT INTO ADMIN VALUES (999888777, 1234);
+
+INSERT INTO BILL VALUES (12345, 1234, 'MasterCard', 0), (43434, 1234, NULL, 300);
+
+INSERT INTO WAITLIST VALUES ('Possible New Child', 'Theior Family', 1234), ('Evil Child', 'Nice Family', 1234);
+
+INSERT INTO CARETAKER_SPECIALIZATION VALUES (123456789, 'Eating Disorders'), (123456789, 'Healthy Eating'), (444333222, 'Trauma'), (444333222, 'OCD');
+
+INSERT INTO ROOM VALUES ('Daycare One', 'Daycare Street NW', 1, 5), ('Daycare Two', 'Other Daycare Street', 1, 10), ('Daycare One', 'Daycare Street NW', 2, 3);
+
+INSERT INTO DAILY_REPORT VALUES (111111111, TODATE('2020/01/01','yyyy/mm/dd'), 1, 5555, '2020-01-01 10:10:10', '2020-01-01 10:15:10', 'Good job child'), (555666777, TODATE('2020/01/01','yyyy/mm/dd'), 2, 5550, '2020-01-01 10:05:10', '2020-01-01 10:10:10', 'Bad child');
+
+INSERT INTO INCIDENTS VALUES (2, 'Needs to be talked to about behaviour');
+
+INSERT INTO ACTIVITIES VALUES (1, 'Learned about space');
 
 
 
