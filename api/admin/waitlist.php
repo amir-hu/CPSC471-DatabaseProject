@@ -10,7 +10,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 include_once '../../config/Database.php'; // Bring in database
 
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
-    // set response code - 405 Method not allowed
+    // Set response code - 405 Method not allowed
     http_response_code(405);
     echo 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed';
     exit();
@@ -46,15 +46,23 @@ $stmt->bindParam(':adminEmpId', $adminEmpId);
 // Check if the data is empty
 if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
 
-    // set response code - 400 bad request
+    // Set response code - 400 bad request
     http_response_code(400);
 
     echo 'Unable to add to waitlist. Data is incomplete.';
 
-    // Make sure that the input data types (field type, length, etc.) matches model
+// Check data type
+}else if (ctype_digit($childName) || ctype_digit($familyName) || !(is_numeric($adminEmpId)) ) {
+
+    // Set response code - 400 bad request
+    http_response_code(400);
+
+    echo 'Unable to add to waitlist. Data type is not correct.';
+
+ // Make sure that the input data types (field type, length, etc.) matches model
 }else if (strlen($childName) > 30 && strlen($familyName) > 30 && strlen($adminEmpId) > 11) {
 
-    // set response code - 400 bad request
+    // Set response code - 400 bad request
     http_response_code(400);
 
     echo 'Unable to add to waitlist. Data does not match the defined model.';
@@ -64,13 +72,13 @@ if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
     // Execute stored procedure
     try {
         $stmt->execute();
-        // set response code - 201 created
+        // Set response code - 201 created
         http_response_code(201);
 
         echo "Child added to waitlist";
     }
     catch(PDOException $exception) {
-        // set response code - 503 service unavailable
+        // Set response code - 503 service unavailable
         // Show error if something goes wrong.
         http_response_code(400);
         echo "Unable to add child to waitlist. " . $exception->getMessage();
