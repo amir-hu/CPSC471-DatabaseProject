@@ -39,7 +39,6 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
 include_once '../../config/Database.php'; // Bring in database
-include_once '../../models/Daycare.php'; // Bring in daycare
 
 // Check if any paramters were passed and return that.
 $daycareName = isset($_GET['DaycareName']) ? $_GET['DaycareName'] : die();
