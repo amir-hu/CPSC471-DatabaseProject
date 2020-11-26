@@ -8,7 +8,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 include_once '../../config/Database.php'; // Bring in database
 
-// Check if any paramters were passed and return that.
+// Check if any paramters were passed and return that else return an empty string.
 $childName = isset($_GET['ChildName']) ? $_GET['ChildName'] : '';
 $familyName = isset($_GET['FamilyName']) ? $_GET['FamilyName'] : '';
 $adminEmpId = isset($_GET['SubmittedById']) ? $_GET['SubmittedById'] : '';
@@ -24,8 +24,7 @@ $sql = 'CALL AddToWaitlist(:childName, :familyName, :adminEmpId)';
 // Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
 
-// Clean up and sanitize data
-// Remove html characters and strip any tags
+// Clean up and sanitize data: remove html characters and strip any tags
 $childName = htmlspecialchars(strip_tags($childName)); 
 $familyName = htmlspecialchars(strip_tags($familyName)); 
 $adminEmpId = htmlspecialchars(strip_tags($adminEmpId)); 
@@ -62,7 +61,8 @@ if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
     
         echo "Child added to waitlist";
     }
-    // if unable to insert into table, tell the user
+
+    // If unable to insert into table, tell the user
     else {
         // set response code - 503 service unavailable
         http_response_code(503);
