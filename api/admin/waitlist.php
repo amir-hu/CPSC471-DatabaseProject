@@ -59,7 +59,7 @@ if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
 
     echo 'Unable to add to waitlist. Data type is not correct.';
 
- // Make sure that the input data types (field type, length, etc.) matches model
+ // Make sure that the input length matches model
 }else if (strlen($childName) > 30 && strlen($familyName) > 30 && strlen($adminEmpId) > 11) {
 
     // Set response code - 400 bad request
@@ -75,10 +75,10 @@ if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
         // Set response code - 201 created
         http_response_code(201);
 
-        echo "Child added to waitlist";
+        echo "Child added to waitlist.";
     }
     catch(PDOException $exception) {
-        // Set response code - 503 service unavailable
+        // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
         echo "Unable to add child to waitlist. " . $exception->getMessage();
