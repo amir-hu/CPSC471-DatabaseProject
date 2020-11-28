@@ -3,13 +3,13 @@
 // Required HTTP headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Methods: DELETE");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 include_once '../../config/Database.php'; // Bring in database
 
-if ($_SERVER["REQUEST_METHOD"] != "POST") {
+if ($_SERVER["REQUEST_METHOD"] != "DELETE") {
     // Set response code - 405 Method not allowed
     http_response_code(405);
     echo 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed';
@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 }
 
 // Check if any paramters were passed and return that else return an empty string.
-$empId = isset($_GET['IdToRemove']) ? $_GET['IdToRemove'] : '';
+$empId = isset($_GET['id']) ? $_GET['id'] : '';
 
 // Instantiate DB and connect
 $database = new Database();
@@ -30,11 +30,9 @@ $sql = 'CALL RemoveEmployee(:empId)';
 $stmt = $db->prepare($sql);
 
 // Clean up and sanitize data: remove html characters and strip any tags
-
 $empId = htmlspecialchars(strip_tags($empId));
 
 // Bind data
-
 $stmt->bindParam('empId', $empId);
 
 // Validate request:
@@ -68,13 +66,22 @@ if (empty($empId)) {
     // Execute stored procedure
     try {
         $stmt->execute();
-        // Set response code - 201 created
-        http_response_code(201);
 
-        echo "Employee has been removed";
+        // Get row count
+        $numOfRecords = $stmt->rowCount();
+        if ($numOfRecords == 0) {
+            echo 'No employee with that id. Nothing was removed.';
+        } 
+        else {
+            // Set response code - 200 ok
+            http_response_code(200);
+            echo "Employee has been removed.";
+        }
+
+        echo $numOfRecords;
     }
     catch(PDOException $exception) {
-        // Set response code - 503 service unavailable
+        // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
         echo "Unable to remove employee. " . $exception->getMessage();
