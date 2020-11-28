@@ -23,7 +23,7 @@ BEGIN
 END;
 
 
-/* Class: CHILD
+/* Table: CHILD
  * Method: GetMedicalCondition()
  * Description: Gets all the conditions and treatments a child may have
  * @param ChildSin - SIN of Child
@@ -38,8 +38,8 @@ BEGIN
         chld.SIN
       , prsn.FirstName
       , prsn.LastName
-      , cndtn.Condition
-      , cndtn.Treatment
+      , cndtn.ConditionName
+      , cndtn.ConditionTreatment
     FROM CHILD as chld
     INNER JOIN
         CONDITIONS as cndtn
@@ -51,8 +51,7 @@ BEGIN
 END;
 
 
-
-/* Class: CHILD
+/* Table: CHILD
  * Method: ChildGetDailyReport()
  * Description: Gets all daily reports for the child ordered by date (desc)
  * @param ChildSIN - Child SIN
@@ -84,7 +83,7 @@ BEGIN
 END;
 
 
-/* Class: CHILD
+/* Table: CHILD
  * Method: ChildGetRoom()
  * Description: Get the room for the child
  * @param ChildSIN - SIN of Child
@@ -108,7 +107,7 @@ BEGIN
 END;
 
 
-/* Class: PARENT_GUARDIAN
+/* Table: PARENT_GUARDIAN
  * Method: SelectCaretaker()
  * Description: View all caretakers and their info
  */
@@ -128,14 +127,14 @@ BEGIN
     FROM CARETAKER as crtkr
     INNER JOIN
          PERSON as prsn
-         ON prsn.SIN = crtkt.SIN
+         ON prsn.SIN = crtkr.SIN
     INNER JOIN
          CARETAKER_SPECIALIZATION as crtkrSpclztn
          ON crtkrSpclztn.CaretakerSIN = crtkr.SIN;
 END;
 
 
-/* Class: PARENT_GUARDIAN
+/* Table: PARENT_GUARDIAN
  * Method: GetChild()
  * Description: Returns child(ren) of parents
  * @param ParentSIN 
@@ -159,158 +158,174 @@ BEGIN
 END;
 
 
-/* Class: PARENT_GUARDIAN
+/* Table: PARENT_GUARDIAN
  * Method: PayBill()
  * Description: Parent pays outstanding bill
- * @param BillId - id of the bill to be paid
- * @param amountPending - the amount left over after payment
+ * @param id - id of the bill to be paid
  * @param PaymentMethod - payment method of parent_guardian
+ * @param amountPending - the amount left over after payment
  */
 DROP PROCEDURE IF EXISTS PayBill;
 CREATE PROCEDURE PayBill(
-      IN bllId INT
+      IN id INT
     , IN pmntMthd VARCHAR(30)
     , IN amntPndg DECIMAL(6,2)
     )
     
 BEGIN
     UPDATE BILL
-    SET AmountPending = amntPndg,
-        PaymentMethod = pmntMthd
-    WHERE BillId = bllId;
+    SET PaymentMethod = pmntMthd,
+        AmountPending = amntPndg
+    WHERE BillId = id;
 END;
 
 
-/* Class: ADMIN
+/* Table: ADMIN
  * Method: AddToWaitlist()
  * Description: Add a new Child/family to the waitlist
- * @param ChildName - Name of child to be inserted
- * @param FamilyName - Last name of child/family
- * @param EmployeeId - ID of employee submitting
+ * @param chldnme - Name of child to be inserted
+ * @param fmlyNme - Last name of child/family
+ * @param empId - ID of employee submitting
  */
 DROP PROCEDURE IF EXISTS AddToWaitlist;
 CREATE PROCEDURE AddToWaitlist(
       IN chldnme VARCHAR(30)
-    , IN Fmlynme VARCHAR(30)
-    , IN emplyId INT
+    , IN fmlyNme VARCHAR(30)
+    , IN empId INT
     )
     
 BEGIN
     INSERT INTO WAITLIST (ChildName, FamilyName, SubmittedById)
-    VALUES (chldnme , Fmlynme, emplyId);
+    VALUES (chldnme, fmlyNme, empId);
 END;
 
 
-/* Class: ADMIN
+/* Table: ADMIN
  * Method: CreateBill()
- * Description: Add a bill
- * @param Amount - amount of bill
- * @param EmployeeId - ID of employee submitting
+ * Description: Add a new bill
+ * @param bill - Id of bill
+ * @param empId - ID of employee submitting
+ * @param method - Payment method
+ * @param amount - amount of bill
  */
 DROP PROCEDURE IF EXISTS CreateBill;
 CREATE PROCEDURE CreateBill(
-      IN amnt DECIMAL(6,2)
-    , IN emplynme VARCHAR(30)
+      IN bill INT
+    , IN empId INT
+    , IN method VARCHAR(30)
+    , IN amount DECIMAL(6,2)
     )
 
 BEGIN 
-    INSERT INTO BILL (CreatedById, AmountPending)
-    VALUES (emplynme, amnt);
+    INSERT INTO BILL (BillId, CreatedById, PaymentMethod, AmountPending)
+    VALUES (bill, empId, method, amount);
 END;
  
 
-/* Class: ADMIN
+/* Table: ADMIN
  * Method: AddEmployee()
- * Description: Add a new Employee
- * @param FirstName - First name
- * @param LastName - Last name
- * @param Gender
- * @param AddrUnitNum - Unit number
- * @param AddrStreet - Street address
- * @param AddrCity - City
- * @param AddrPostalCode - Postal code
- * @param StartDay - Start Day
- * @param StartMonth - StartMonth
- * @param StartYear
- * @param Daycare - Daycare Name
- * @param Address - Daycare Address
- * @param SIN - SIN of new EmployeeID
- * @param WorkHours - Hours available to work
- * @param PhoneNum
+ * Description: Add a new employee
+ * @param daycare - Daycare Name
+ * @param address - Daycare Address
+ * @param empSIN - SIN of new EmployeeID
+ * @param empId - Employee ID
+ * @param wrkHrs - Hours available to work
  */
 DROP PROCEDURE IF EXISTS AddEmployee;
 CREATE PROCEDURE AddEmployee(
-      IN FrstNm VARCHAR(30) 
-    , IN LstNm VARCHAR(30)
-    , IN Gndr VARCHAR(30)
-    , IN AddrUntNm INT
-    , IN AddrStrt VARCHAR(50)
-    , IN AddrCty VARCHAR(20)
-    , IN AddrPstlCde VARCHAR(30)
-    , IN StrtDy VARCHAR(10)
-    , IN StrtMnth VARCHAR(9)
-    , IN StrtYr INT
-    , IN Dycre VARCHAR(100)
-    , IN Addrss VARCHAR(9) 
+      IN daycare VARCHAR(100)
+    , IN address VARCHAR(100) 
     , IN empSIN VARCHAR(8)
-    , IN WrkHrs DECIMAL(4,2)
-    , IN PhneNm VARCHAR(20)
-        )
+    , IN empId INT
+    , IN wrkHrs DECIMAL(4,2)
+    )
 
 BEGIN 
-    INSERT INTO PERSON (SIN, FIRSTNAME, LASTNAME, GENDER, ADDRUNITNUM, ADDRSTREET, ADDRCITY, ADDRPOSTALCODE, STARTDAY, STARTMONTH, STARTYEAR)
-    VALUES (empSIN, FrstNm, LstNm, Gndr, AddrUntNm, AddrStrt, AddrCty, AddrPstlCde, StrtDy, StrtMnth, StrtYr);
-
-    INSERT INTO EMPLOYEE (DaycareName, DaycareAddress, SIN, WorkHours)
-    VALUES (Dycre, Addrss, SIN, WrkHrs);
-
-    INSERT INTO PERSON_PHONE (SIN, PHONENUM)
-    VALUES (empSIN, PhneNm);
+    INSERT INTO EMPLOYEE (DaycareName, DaycareAddress, SIN, EmployeeId, WorkHours)
+    VALUES (daycare, address, empSIN, empId, wrkHrs);
 END;
 
 
-/* Class: ADMIN
+/* Table: ADMIN
  * Method: RemoveEmployee()
- * Description: Add a bill
+ * Description: Remove an employee
  * @param EmployeeId - ID of employee to remove
  */
 DROP PROCEDURE IF EXISTS RemoveEmployee;
 CREATE PROCEDURE RemoveEmployee(
-      IN emplyid INT
+      IN empId INT
     )
 
 BEGIN 
     DELETE FROM EMPLOYEE
-    WHERE EmployeeId = emplyid; 
+    WHERE EmployeeId = empId; 
 END;
 
 
-/* Class: EMPLOYEE
+/* Table: PERSON
+ * Method: AddPerson()
+ * Description: Add a new person
+ * @param prsnSIN - SIN of new person
+ * @param frstNm - First name
+ * @param lstNm - Last name
+ * @param gndr - Gender
+ * @param untNum - Unit number
+ * @param strt - Street address
+ * @param cty - City
+ * @param pstlCde - Postal code
+ * @param strtDy - Start Day
+ * @param strtMnth - StartMonth
+ * @param strtYr - Start year
+ * @param phneNm - Phone number
+ */
+DROP PROCEDURE IF EXISTS AddPerson;
+CREATE PROCEDURE AddPerson(
+      IN prsnSIN VARCHAR(8)
+    , IN frstNm VARCHAR(30)
+    , IN gndr VARCHAR(30)
+    , IN untNum INT
+    , IN strt VARCHAR(50)
+    , IN cty VARCHAR(20)
+    , IN pstlCode VARCHAR(20)
+    , IN strtDy INT
+    , IN strtMnth VARCHAR(9)
+    , IN strtYr INT
+    , IN phnNum VARCHAR(20)
+    )
+
+BEGIN
+    INSERT INTO PERSON (SIN, FirstName, LastName, Gender, AddrUnitNum, AddrStreet, AddrCity, AddrPostalCode, StartDay, StartMonth, StartYear)
+    VALUES (@prsnSIN, @frstNm, @lstNm, @gndr, @untNum, @strt, @cty, @pstlCode, @strtDy, @strtMnth, @strtYr);
+
+    INSERT INTO PERSON_PHONE (SIN, PhoneNum)
+    VALUES (@prsnSIN, @phnNum);
+END;
+
+
+/* Table: EMPLOYEE
  * Method: GetDaycare()
  * Description: Gets the daycare the Employee works at
- * @param EmployeeID - Id of employee
+ * @param empId - Id of employee
  */
-
 DROP PROCEDURE IF EXISTS GetDaycare;
 CREATE PROCEDURE GetDaycare(
-      IN emplyid INT
+      IN empId INT
     )
 
 BEGIN
     SELECT 
          DaycareName
        , DaycareAddress
-       , TotalNumOfCaretakers
     FROM EMPLOYEE
-    WHERE EmployeeId = emplyId;
+    WHERE EmployeeId = empId;
 END;
 
 
-/* Class: DAYCARE
+/* Table: DAYCARE
  * Method: GetEmployees()
  * Description: Gets a list of all employees
- * @param daycareName - the daycarename
- * @param daycareAddress - the address of the daycre
+ * @param dycreName - the daycarename
+ * @param dycreAddress - the address of the daycre
  */
 DROP PROCEDURE IF EXISTS GetEmployees;
 CREATE PROCEDURE GetEmployees(
@@ -330,20 +345,20 @@ BEGIN
          PERSON as prsn
          ON prsn.SIN = emp.SIN
     WHERE emp.DaycareName = dycreName
-        and emp.DaycareAddress = dycreAddrss;
+        AND emp.DaycareAddress = dycreAddress;
 END;
 
 
-/* Class: DAYCARE
+/* Table: DAYCARE
  * Method: DaycareGetRooms()
  * Description: Get a list of rooms at the daycare
- * @param DaycareName - Name of the daycare
- * @param address - the address of the daycare
+ * @param dycreName - Name of the daycare
+ * @param dycreAddress - the address of the daycare
  */
 DROP PROCEDURE IF EXISTS DaycareGetRooms;
 CREATE PROCEDURE DaycareGetRooms(
-      IN dycreNme VARCHAR(100)
-    , IN dycreAddrss VARCHAR(100)
+      IN dycreName VARCHAR(100)
+    , IN dycreAddress VARCHAR(100)
     )
 
 BEGIN
@@ -351,49 +366,51 @@ BEGIN
          RoomId
        , SeatsAvailable
     FROM ROOM
-    WHERE DaycareName = dycreNme
-        and DaycareAddress = dycreAddrss;
+    WHERE DaycareName = dycreName
+        AND DaycareAddress = dycreAddress;
 END;
 
 
-/* Class: CARETAKER
+/* Table: CARETAKER
  * Method: AddReport()
  * Description: Insert report into Daily_report table
- * @param EmployeeId - EmployeeID of the caretaker inserting the report
- * @param date - Date of the report
- * @param StartTime - Start time of the report
- * @param Endtime - End time of the report
- * @param ChildSIN - SIN of child the report is about
- * @param ReportComment - Text of report
+ * @param chldSIN - SIN of child the report is about
+ * @param rptId - Id of the report
+ * @param empId - EmployeeID of the caretaker inserting the report
+ * @param rptDte - Date of the report
+ * @param strtTme - Start time of the report
+ * @param endtme - End time of the report
+ * @param rptCmmnt - Text of report
  */
 DROP PROCEDURE IF EXISTS AddReport;
 CREATE PROCEDURE AddReport(
-      IN  EmplyId INT  
-    , IN  rptDte DATE
-    , IN  StrtTme TIME    
-    , IN  Endtme TIME
-    , IN  ChldSIN VARCHAR(8)
-    , IN  ReprtCmmnt VARCHAR(1000)
+      IN chldSIN VARCHAR(8)
+    , IN rptID INT
+    , IN empId INT  
+    , IN rptDte DATE
+    , IN strtTme TIME    
+    , IN endtme TIME
+    , IN rptCmmnt VARCHAR(1000)
     )
 
 BEGIN 
-    INSERT INTO DAILY_REPORT (ChildSIN, ReportDate, CaretakerEmployeeId, StartTimne, EndTime, ReportComment)
-    VALUES (ChldSIN, rptDte, EmplyId, StrtTme, EndTme, RprtCmmnt);
+    INSERT INTO DAILY_REPORT (ChildSIN, ReportId, CaretakerEmployeeId, ReportDate, StartTime, EndTime, ReportComment)
+    VALUES (chldSIN, rptId, empId, rptDte, strtTme, endTme, rptCmmnt);
 END;
 
 
-/* Class: CARETAKER
+/* Table: CARETAKER
  * Method: CaretakerGetDailyReport()
  * Description: Get daily report submitted by that caretaker
- * @param CaretakerId - Id of caretaker
- * @param Date - Date wanted
- * @param ChildSIN - SIN of child repoported on
+ * @param crtkrId - Id of caretaker
+ * @param rptdate - Date wanted
+ * @param chldSIN - SIN of child repoported on
  */
 DROP PROCEDURE IF EXISTS CaretakerGetDailyReport;
 CREATE PROCEDURE CaretakerGetDailyReport(
-      IN  CrtkrId INT  
-    , IN  ChldSIN VARCHAR(8)
-    , IN  dte DATE
+      IN  crtkrId INT  
+    , IN  chldSIN VARCHAR(8)
+    , IN  rptdate DATE
     )
 BEGIN 
     SELECT
@@ -402,26 +419,25 @@ BEGIN
        , EndTime
        , ReportComment
     FROM DAILY_REPORT
-    WHERE ChildSIN = ChldSIN
-        AND CaretakerEmployeeId = CrtkrId
-        AND ReportDate = Dte;
+    WHERE ChildSIN = chldSIN
+        AND CaretakerEmployeeId = crtkrId
+        AND ReportDate = rptdate;
 END;
 
 
-/* Class: ROOM
+/* Table: ROOM
  * Method: AssignChild()
  * Description: Assign a child to the room
- * @param ChildSin- SIN of CHILD
- * @param RoomId - Id of Room being assigned
+ * @param chldSIN- SIN of CHILD
+ * @param rmId - Id of Room being assigned
  */
 DROP PROCEDURE IF EXISTS AssignChild;
 CREATE PROCEDURE AssignChild(  
-     IN  chldSIN VARCHAR(8)
-    , IN  rmId INT
+     IN chldSIN VARCHAR(8)
+   , IN rmId INT
     )
 BEGIN
     UPDATE CHILD
     SET RoomId = rmId
     WHERE SIN = chldSIN;
 END;
-
