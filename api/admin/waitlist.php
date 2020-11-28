@@ -60,7 +60,7 @@ if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
     echo 'Unable to add to waitlist. Data type is not correct.';
 
  // Make sure that the input length matches model
-}else if (strlen($childName) > 30 && strlen($familyName) > 30 && strlen($adminEmpId) > 11) {
+}else if (strlen($childName) > 30 || strlen($familyName) > 30 || strlen($adminEmpId) > 11) {
 
     // Set response code - 400 bad request
     http_response_code(400);
