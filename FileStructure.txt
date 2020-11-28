@@ -1,7 +1,7 @@
 ﻿├── api - Contains endpoints which execute stored procecures 
 │   ├── admin
-│   │   ├── addToWaitlist.php
-│   │   ├── createBill.php
+│   │   ├── waitlist.php
+│   │   ├── bill.php
 │   │   ├── addEmployee.php
 │   │   ├── removeEmployee.php
 │   ├── daycare
