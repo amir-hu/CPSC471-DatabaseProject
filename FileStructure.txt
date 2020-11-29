@@ -1,11 +1,11 @@
 ﻿├── api - Contains endpoints which execute stored procecures 
 │   ├── admin
-│   │   ├── waitlist.php
-│   │   ├── bill.php
 │   │   ├── addEmployee.php
+│   │   ├── bill.php
 │   │   ├── removeEmployee.php
+│   │   ├── waitlist.php
 │   ├── daycare
-│   │   ├── read.php
+│   ├── employee
 │   └── person
 ├── config
 │   ├── Database.php - Connecting API to MySQL database
