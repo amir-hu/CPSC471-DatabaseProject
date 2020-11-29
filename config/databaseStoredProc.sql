@@ -282,6 +282,7 @@ DROP PROCEDURE IF EXISTS AddPerson;
 CREATE PROCEDURE AddPerson(
       IN prsnSIN VARCHAR(8)
     , IN frstNm VARCHAR(30)
+    , IN lstNm VARCHAR(30)
     , IN gndr VARCHAR(30)
     , IN untNum INT
     , IN strt VARCHAR(50)
@@ -295,10 +296,10 @@ CREATE PROCEDURE AddPerson(
 
 BEGIN
     INSERT INTO PERSON (SIN, FirstName, LastName, Gender, AddrUnitNum, AddrStreet, AddrCity, AddrPostalCode, StartDay, StartMonth, StartYear)
-    VALUES (@prsnSIN, @frstNm, @lstNm, @gndr, @untNum, @strt, @cty, @pstlCode, @strtDy, @strtMnth, @strtYr);
+    VALUES (prsnSIN, frstNm, lstNm, gndr, untNum, strt, cty, pstlCode, strtDy, strtMnth, strtYr);
 
     INSERT INTO PERSON_PHONE (SIN, PhoneNum)
-    VALUES (@prsnSIN, @phnNum);
+    VALUES (prsnSIN, phnNum);
 END;
 
 
