@@ -26,15 +26,15 @@ CREATE TABLE ROOM (
 
 CREATE TABLE IF NOT EXISTS PERSON (
      SIN VARCHAR(8) NOT NULL
-   , FIRSTNAME VARCHAR(30)
-   , LASTNAME VARCHAR(30)
-   , GENDER VARCHAR(30)
-   , ADDRUNITNUM INT
-   , ADDRSTREET VARCHAR(50)
-   , ADDRCITY VARCHAR(20)
-   , ADDRPOSTALCODE VARCHAR(20)
-   , STARTDAY VARCHAR(10)
-   , STARTMONTH VARCHAR(9)
+   , FIRSTNAME VARCHAR(30) NOT NULL
+   , LASTNAME VARCHAR(30) NOT NULL
+   , GENDER VARCHAR(30) NOT NULL
+   , ADDRUNITNUM INT NOT NULL
+   , ADDRSTREET VARCHAR(50) NOT NULL
+   , ADDRCITY VARCHAR(20) NOT NULL
+   , ADDRPOSTALCODE VARCHAR(20) NOT NULL
+   , STARTDAY INT
+   , STARTMONTH INT
    , STARTYEAR INT
    , PRIMARY KEY (SIN)
 );
@@ -188,14 +188,15 @@ CREATE TABLE ACTIVITIES (
 
 
 
-INSERT INTO PERSON VALUES 
-('12345678', 'Erin', 'Employee', 'Female', 123, 'Calgary Drive', 'Calgary', 'T2X 2E3', '09','07',2003),
-('11122233', 'Joe', 'Fresh', 'Male',456, 'Also Clagary Dr', 'Calgary','T2X 2E3','12','10',2008), 
-('11111111', 'First', 'Child', 'Female', 10, 'Home address','Calgary', 'T2X 2E3','19','07',2011), 
-('11111112', 'Child', 'Parent', 'Male', 30, 'Home address','Calgary', 'T2X 2E3','09','07',2003), 
-('99988877', 'Admin', 'Lady', 'Female', 107, 'The Daycare St', 'Calgary', 'T5R 0R4','29','10',2008), 
-('55566777', 'A Child', 'Person', 'Male', 10, 'Also Clagary Dr', 'Calgary', 'T5R 0R4', '12','10',2008), 
-('44433222', 'Dr', 'Employee', 'Male', 1000, 'The Mansion','Calgary', 'T5R 0R4', '10','10',2010);
+INSERT INTO PERSON (SIN, FirstName, LastName, Gender, AddrUnitNum, AddrStreet, AddrCity, AddrPostalCode, StartDay, StartMonth, StartYear)
+VALUES 
+('12345678', 'Erin', 'Employee', 'Female', 123, 'Calgary Drive', 'Calgary', 'T2X 2E3', 09,07,2003),
+('11122233', 'Joe', 'Fresh', 'Male',456, 'Also Clagary Dr', 'Calgary','T2X 2E3',12,10,2008), 
+('11111111', 'First', 'Child', 'Female', 10, 'Home address','Calgary', 'T2X 2E3',19,07,2011), 
+('11111112', 'Child', 'Parent', 'Male', 30, 'Home address','Calgary', 'T2X 2E3',09,07,2003), 
+('99988877', 'Admin', 'Lady', 'Female', 107, 'The Daycare St', 'Calgary', 'T5R 0R4',29,'10',2008), 
+('55566777', 'A Child', 'Person', 'Male', 10, 'Also Clagary Dr', 'Calgary', 'T5R 0R4', 12,'10',2008), 
+('44433222', 'Dr', 'Employee', 'Male', 1000, 'The Mansion','Calgary', 'T5R 0R4', 10,10,2010);
 
 INSERT INTO DAYCARE VALUES ('Daycare One', 'Daycare Street NW', 5), ('Daycare Two', 'Other Daycare Street', 30);
 
