@@ -22,6 +22,22 @@ BEGIN
     WHERE DaycareName = name;
 END;
 
+/*
+ * Table: DAYCARE
+ * Description: Create a daycare
+ */
+DROP PROCEDURE IF EXISTS CreateDaycare;
+CREATE PROCEDURE CreateDaycare (
+      IN name VARCHAR(100)
+    , IN address VARCHAR(100)
+    , IN caretakers INT
+    )
+
+BEGIN
+    INSERT INTO DAYCARE (DaycareName, DaycareAddress, TotalNumOfCaretakers)
+    VALUES (name,address,caretakers);
+END;
+
 
 /* Table: CHILD
  * Method: GetMedicalCondition()
