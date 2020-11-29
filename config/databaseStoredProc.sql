@@ -305,7 +305,7 @@ CREATE PROCEDURE AddPerson(
     , IN cty VARCHAR(20)
     , IN pstlCode VARCHAR(20)
     , IN strtDy INT
-    , IN strtMnth VARCHAR(9)
+    , IN strtMnth INT
     , IN strtYr INT
     , IN phnNum VARCHAR(20)
     )
@@ -316,6 +316,22 @@ BEGIN
 
     INSERT INTO PERSON_PHONE (SIN, PhoneNum)
     VALUES (prsnSIN, phnNum);
+END;
+
+
+/* Table: PERSON
+ * Method: RemovePerson()
+ * Description: Remove a person
+ * @param prsnSIN - SIN of person to remove
+ */
+DROP PROCEDURE IF EXISTS RemovePerson;
+CREATE PROCEDURE RemovePerson(
+      IN prsnSIN VARCHAR(8)
+    )
+
+BEGIN
+    DELETE FROM PERSON
+    WHERE SIN = prsnSIN; 
 END;
 
 
