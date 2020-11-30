@@ -16,75 +16,72 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
     exit();
 }
 
+// Get data in JSON format.
+$data = json_decode(file_get_contents("php://input"));
+
 // Check if any paramters were passed and return that else return an empty string.
-$billId = isset($_GET['BillId']) ? $_GET['BillId'] : '';
-$empId = isset($_GET['CreatedById']) ? $_GET['CreatedById'] : '';
-$pmntMethod = isset($_GET['PaymentMethod']) ? $_GET['PaymentMethod'] : NULL;
-$amtPending = isset($_GET['AmountPending']) ? $_GET['AmountPending'] : '';
+$childSIN = !empty($data->ChildSIN) ? $data->ChildSIN : '';
+$roomId = !empty($data->RoomId) ? $data->RoomId : '';
 
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
-$sql = 'CALL CreateBill(:billId, :empId, :pmntMethod, :amtPending)';
+$sql = 'CALL AssignChild(:childSIN, :roomId)';
 
 // Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
 
 // Clean up and sanitize data: remove html characters and strip any tags
-$billId = htmlspecialchars(strip_tags($billId));
-$empId = htmlspecialchars(strip_tags($empId));
-$pmntMethod = $pmntMethod != NULL ? htmlspecialchars(strip_tags($pmntMethod)) : NULL;
-$amtPending = htmlspecialchars(strip_tags($amtPending));
+$childSIN = htmlspecialchars(strip_tags($childSIN));
+$roomId = htmlspecialchars(strip_tags($roomId));
 
 // Bind data
-$stmt->bindParam(':billId', $billId);
-$stmt->bindParam(':empId', $empId);
-$stmt->bindParam(':pmntMethod', $pmntMethod);
-$stmt->bindParam(':amtPending', $amtPending);
+$stmt->bindParam(':childSIN', $childSIN);
+$stmt->bindParam(':roomId', $roomId);
 
 // Validate request:
 
 // Check if the data is empty
-if (empty($billId) || empty($empId) || empty($amtPending)) {
+if (empty($childSIN) || empty($roomId)) {
 
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to create bill. Data is incomplete.';
+    echo 'Unable to assign child to room. Data is incomplete.';
 
     // Check data type
-}else if ( !(is_numeric($billId) && is_numeric($empId) & is_numeric($amtPending)) ) {
+}else if ( !(is_numeric($childSIN) & is_numeric($roomId)) ) {
 
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to create bill. Data type is not correct.';
+    echo 'Unable to assign child to room. Data type is not correct.';
 
     // Make sure that the input length matches model
-}else if (strlen($billId) > 11 || strlen($empId) > 11) {
+}else if (strlen($childSIN) > 11 || strlen($roomId) > 8) {
 
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to create bill. Data does not match the defined model.';
+    echo 'Unable to assign child to room. Data does not match the defined model.';
 
 }else {
 
     // Execute stored procedure
     try {
         $stmt->execute();
-        // Set response code - 201 created
-        http_response_code(201);
+        // Set response code - 200 ok
+        http_response_code(200);
 
-        echo "Bill has been created.";
+        echo "Child has been assigned to room.";
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
-        echo "Unable to create bill. " . $exception->getMessage();
+        echo "Unable to assign child to room. " . $exception->getMessage();
     }
 }
 ?>
