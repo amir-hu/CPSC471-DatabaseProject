@@ -16,8 +16,11 @@ if ($_SERVER["REQUEST_METHOD"] != "DELETE") {
     exit();
 }
 
+// Get data in JSON format.
+$data = json_decode(file_get_contents("php://input"));
+
 // Check if any paramters were passed and return that else return an empty string.
-$empId = isset($_GET['id']) ? $_GET['id'] : '';
+$empId = !empty($data->EmployeeId) ? $data->EmployeeId : '';
 
 // Instantiate DB and connect
 $database = new Database();
@@ -71,14 +74,12 @@ if (empty($empId)) {
         $numOfRecords = $stmt->rowCount();
         if ($numOfRecords == 0) {
             echo 'No employee with that id. Nothing was removed.';
-        } 
+        }
         else {
             // Set response code - 200 ok
             http_response_code(200);
             echo "Employee has been removed.";
         }
-
-        echo $numOfRecords;
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request

@@ -16,8 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") {
     exit();
 }
 
-// Check if any paramters were passed and return that else return an empty string.
-
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
@@ -32,12 +30,24 @@ $stmt = $db->prepare($sql);
     try {
         $stmt->execute();
 
-        $caretakerRows = $stmt->fetchAll(PDO::FETCH_OBJ);
-        echo json_encode($caretakerRows);
-       
-        // Set response code - 200 ok
-        http_response_code(200);
-        
+        // Get row count
+        $numOfRecords = $stmt->rowCount();
+        if ($numOfRecords == 0) {
+            echo 'No caretakers.';
+        }
+        else {
+            // Set response code - 200 ok
+            http_response_code(200);
+
+            // Returns all rows as an object
+            $caretakerRows = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            // Turn to JSON & output
+            echo json_encode($caretakerRows);
+        }
+
+        $stmt->closeCursor();
+
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request

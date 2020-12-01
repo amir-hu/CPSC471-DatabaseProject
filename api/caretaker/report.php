@@ -1,5 +1,4 @@
 <?php
-
 // Required HTTP headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -20,69 +19,76 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") {
 $data = json_decode(file_get_contents("php://input"));
 
 // Check if any paramters were passed and return that else return an empty string.
-$prntSIN = !empty($data->ParentSIN) ? $data->ParentSIN : '';
+$crtkrId = !empty($data->CaretakerEmployeeId) ? $data->CaretakerEmployeeId : '';
+$chldSIN = !empty($data->ChildSIN) ? $data->ChildSIN : '';
+$rptdate = !empty($data->ReportDate) ? $data->ReportDate : '';
 
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
-$sql = 'CALL GetChild(:prntSIN)';
+$sql = 'CALL CaretakerGetDailyReport(:crtkrId, :chldSIN, :rptdate)';
 
+// Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
+
 // Clean up and sanitize data: remove html characters and strip any tags
-$prntSIN = htmlspecialchars(strip_tags($prntSIN));
+$crtkrId = htmlspecialchars(strip_tags($crtkrId));
+$chldSIN = htmlspecialchars(strip_tags($chldSIN));
+$rptdate = htmlspecialchars(strip_tags($rptdate));
 
 // Bind data
-$stmt->bindParam('prntSIN', $prntSIN);
+$stmt->bindParam(':crtkrId', $crtkrId);
+$stmt->bindParam(':chldSIN', $chldSIN);
+$stmt->bindParam(':rptdate', $rptdate);
 
+// Validate request:
 
-if (empty($prntSIN)) {
-
-    // Set response code - 400 bad request
-    http_response_code(400);
-
-    echo 'Unable to retrive child. Data is incomplete.';
-
-    // Check data type
-}else if (!(is_numeric($prntSIN)) ) {
+// Check if the data is empty
+if ( empty($crtkrId) || empty($chldSIN)|| empty($rptdate)) {
 
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to retrive child. Data type is not correct.';
+    echo "\nUnable to get reports. Data is incomplete.";
 
-    // Make sure that the input data types (field type, length, etc.) matches model
-}else if (strlen($prntSIN) > 8) {
+// Check data type
+}else if ( !(is_numeric($crtkrId)) || !(is_string($chldSIN)) || !(is_string($rptdate))) {
 
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to retrive child. Data does not match the defined model.';
+    echo "\nUnable to get reports. Data type is not correct.";
 
-} else {
+ // Make sure that the input length matches model
+}else if (strlen($chldSIN) > 8 || strlen($crtkrId) > 11 || strlen($rptdate) > 10 ) {
 
-    // Prepare for execution of stored procedure
+    // Set response code - 400 bad request
+    http_response_code(400);
 
+    echo "\nUnable to get reports. Data does not match the defined model.";
+
+}else {
 
     // Execute stored procedure
     try {
+
         $stmt->execute();
 
-        // Get row count
+        // Set response code - 200 OK
+        http_response_code(200);
+
+        // Returns all rows as an object
         $numOfRecords = $stmt->rowCount();
-        if ($numOfRecords == 0) {
-            echo 'No children with that parent SIN.';
+        if ($numOfRecords == 0){
+            echo "\nNo reports for the specified parameters.";
         }
         else {
-            // Set response code - 200 ok
-            http_response_code(200);
-
-            // Returns all rows as an object
-            $childRows = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $reportRows = $stmt->fetchAll(PDO::FETCH_OBJ);
 
             // Turn to JSON & output
-            echo json_encode($childRows);
+            echo json_encode($reportRows);
         }
 
         $stmt->closeCursor();
@@ -92,7 +98,7 @@ if (empty($prntSIN)) {
         // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
-        echo "Unable to retrieve list. " . $exception->getMessage();
+        echo "Unable to get reports. Error:\n" . $exception->getMessage();
     }
 }
 ?>

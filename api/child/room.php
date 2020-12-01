@@ -16,10 +16,11 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") {
     exit();
 }
 
+// Get data in JSON format.
 $data = json_decode(file_get_contents("php://input"));
 
 // Check if any paramters were passed and return that else return an empty string.
-$childSIN = !empty($data->childSIN) ? $data->childSIN : '';
+$childSIN = !empty($data->ChildSIN) ? $data->ChildSIN : '';
 
 // Instantiate DB and connect
 $database = new Database();
@@ -48,7 +49,7 @@ if (empty($childSIN)) {
     echo 'Unable to get room. Data is incomplete.';
 
 // Check data type
-}else if (!(is_string($childSIN))) {
+}else if (!(is_numeric($childSIN))) {
 
     // Set response code - 400 bad request
     http_response_code(400);
@@ -69,16 +70,23 @@ if (empty($childSIN)) {
     try {
         $stmt->execute();
 
-        // Returns all rows as an object
-        $roomRows = $stmt->fetchAll(PDO::FETCH_OBJ);
-        
-        // Turn to JSON & output
-        echo json_encode($roomRows);
-        
-        $stmt->closeCursor();
+        // Get row count
+        $numOfRecords = $stmt->rowCount();
+        if ($numOfRecords == 0) {
+            echo 'No room for child with that SIN.';
+        }
+        else {
+            // Set response code - 200 ok
+            http_response_code(200);
 
-        // Set response code - 200 OK       
-        http_response_code(200);
+            // Returns all rows as an object
+            $reportRows = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            // Turn to JSON & output
+            echo json_encode($reportRows);
+        }
+
+        $stmt->closeCursor();
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request

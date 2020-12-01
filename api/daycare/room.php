@@ -28,7 +28,8 @@ $daycareName = !empty($data->DaycareName) ? $data->DaycareName : '';
 $daycareAddress = !empty($data->DaycareAddress) ? $data->DaycareAddress : '';
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
-$sql = 'CALL GetEmployees(:daycareName, :daycareAddress)';
+$sql = 'CALL DaycareGetRooms(:daycareName, :daycareAddress)';
+
 // Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
 
@@ -36,9 +37,11 @@ $stmt = $db->prepare($sql);
 $daycareName = htmlspecialchars(strip_tags($daycareName));
 $daycareAddress = htmlspecialchars(strip_tags($daycareAddress));
 
+
 // Bind data
 $stmt->bindParam(':daycareName', $daycareName);
 $stmt->bindParam(':daycareAddress', $daycareAddress);
+
 
 // Validate request:
 
@@ -48,15 +51,15 @@ if (empty($daycareName) || empty($daycareAddress) ) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get employees. Data is incomplete.';
+    echo 'Unable to get room. Data is incomplete.';
 
     // Check data type
-}else if ( ctype_digit($daycareName) || ctype_digit($daycareAddress)  ) {
+}else if (ctype_digit($daycareName)) {
 
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get employees. Data type is not correct.';
+    echo 'Unable to get room. Data type is not correct.';
 
     // Make sure that the input length matches model
 }else if (strlen($daycareName) > 100 || strlen($daycareAddress) > 100 ) {
@@ -64,7 +67,7 @@ if (empty($daycareName) || empty($daycareAddress) ) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get employees. Data does not match the defined model.';
+    echo 'Unable to get room. Data does not match the defined model.';
 
 }else {
 
@@ -72,16 +75,27 @@ if (empty($daycareName) || empty($daycareAddress) ) {
     try {
         $stmt->execute();
 
-        $empRows = $stmt->fetchAll(PDO::FETCH_OBJ);
-        echo json_encode($empRows);
-        // Set response code - 200 created
-        http_response_code(200);        
+        // Get row count
+        $numOfRecords = $stmt->rowCount();
+        if ($numOfRecords == 0) {
+            echo 'No room for that daycare.';
+        }
+        else {
+            // Set response code - 200 ok
+            http_response_code(200);
+
+            // Returns all rows as an object
+            $roomRows = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            // Turn to JSON & output
+            echo json_encode($roomRows);
+        }
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
-        echo "Unable to get employees. " . $exception->getMessage();
+        echo "Unable to get room. " . $exception->getMessage();
     }
 }
 ?>

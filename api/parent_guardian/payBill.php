@@ -20,7 +20,6 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 $database = new Database();
 $db = $database->connect();
 
-// ---------------------------------------------------------- CONVERT TO JSON FORMAT ---------------------------------------------------------- //
 // Get data that is gonna be in JSON format.
 $data = json_decode(file_get_contents("php://input"));
 
@@ -28,8 +27,6 @@ $data = json_decode(file_get_contents("php://input"));
 $billId = !empty($data->BillId) ? $data->BillId: '';
 $amountPending = !empty($data->AmountPending) ? $data->AmountPending: '';
 $paymentMethod = !empty($data->PaymentMethod ) ? $data->PaymentMethod : '';
-
-
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
 $sql = 'CALL PayBill(:billId, :paymentMethod, :amountPending)';
@@ -55,7 +52,7 @@ if (empty($billId) || empty($amountPending) || empty($paymentMethod)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Payment Unsuccesfull. Data is incomplete.';
+    echo 'Payment unsuccesfull. Data is incomplete.';
 
     // Check data type
 }else if ( !is_numeric($billId) || !is_numeric($amountPending) || ctype_digit($paymentMethod) ) {
@@ -63,7 +60,7 @@ if (empty($billId) || empty($amountPending) || empty($paymentMethod)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Payment Unsuccesfull. Data type is not correct.';
+    echo 'Payment unsuccesfull. Data type is not correct.';
 
     // Make sure that the input length matches model
 }else if (strlen($billId) > 11 || strlen($amountPending) > 11 || strlen($paymentMethod) > 30) {
@@ -71,7 +68,7 @@ if (empty($billId) || empty($amountPending) || empty($paymentMethod)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Payment Unsuccesfull. Data does not match the defined model.';
+    echo 'Payment unsuccesfull. Data does not match the defined model.';
 
 }else {
 
@@ -79,7 +76,7 @@ if (empty($billId) || empty($amountPending) || empty($paymentMethod)) {
     try {
         $stmt->execute();
         // Set response code - 201 created
-        http_response_code(201);
+        http_response_code(200);
 
         echo "Payment Succesfull.";
     }

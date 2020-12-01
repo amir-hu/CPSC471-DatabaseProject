@@ -16,10 +16,13 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
     exit();
 }
 
+// Get data in JSON format.
+$data = json_decode(file_get_contents("php://input"));
+
 // Check if any paramters were passed and return that else return an empty string.
-$childName = isset($_GET['ChildName']) ? $_GET['ChildName'] : '';
-$familyName = isset($_GET['FamilyName']) ? $_GET['FamilyName'] : '';
-$adminEmpId = isset($_GET['SubmittedById']) ? $_GET['SubmittedById'] : '';
+$childName = !empty($data->ChildName) ? $data->ChildName : '';
+$familyName = !empty($data->FamilyName) ? $data->FamilyName : '';
+$adminEmpId = !empty($data->SubmittedById) ? $data->SubmittedById : '';
 
 // Instantiate DB and connect
 $database = new Database();

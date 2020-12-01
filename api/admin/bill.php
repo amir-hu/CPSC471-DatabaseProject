@@ -16,11 +16,14 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
     exit();
 }
 
+// Get data in JSON format.
+$data = json_decode(file_get_contents("php://input"));
+
 // Check if any paramters were passed and return that else return an empty string.
-$billId = isset($_GET['BillId']) ? $_GET['BillId'] : '';
-$empId = isset($_GET['CreatedById']) ? $_GET['CreatedById'] : '';
-$pmntMethod = isset($_GET['PaymentMethod']) ? $_GET['PaymentMethod'] : NULL;
-$amtPending = isset($_GET['AmountPending']) ? $_GET['AmountPending'] : '';
+$billId = !empty($data->BillId) ? $data->BillId : '';
+$empId = !empty($data->CreatedById) ? $data->CreatedById : '';
+$pmntMethod = !empty($data->PaymentMethod) ? $data->PaymentMethod : NULL;
+$amtPending = !empty($data->AmountPending) ? $data->AmountPending : '';
 
 // Instantiate DB and connect
 $database = new Database();

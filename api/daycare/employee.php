@@ -28,8 +28,7 @@ $daycareName = !empty($data->DaycareName) ? $data->DaycareName : '';
 $daycareAddress = !empty($data->DaycareAddress) ? $data->DaycareAddress : '';
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
-$sql = 'CALL DaycareGetRooms(:daycareName, :daycareAddress)';
-
+$sql = 'CALL GetEmployees(:daycareName, :daycareAddress)';
 // Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
 
@@ -37,11 +36,9 @@ $stmt = $db->prepare($sql);
 $daycareName = htmlspecialchars(strip_tags($daycareName));
 $daycareAddress = htmlspecialchars(strip_tags($daycareAddress));
 
-
 // Bind data
 $stmt->bindParam(':daycareName', $daycareName);
 $stmt->bindParam(':daycareAddress', $daycareAddress);
-
 
 // Validate request:
 
@@ -75,12 +72,21 @@ if (empty($daycareName) || empty($daycareAddress) ) {
     try {
         $stmt->execute();
 
-        $empRows = $stmt->fetchAll(PDO::FETCH_OBJ);
-        echo json_encode($empRows);
-        // Set response code - 200 created
-        http_response_code(200);
+        // Get row count
+        $numOfRecords = $stmt->rowCount();
+        if ($numOfRecords == 0) {
+            echo 'No daycare with that name and address.';
+        }
+        else {
+            // Set response code - 200 ok
+            http_response_code(200);
 
-        
+            // Returns all rows as an object
+            $empRows = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            // Turn to JSON & output
+            echo json_encode($empRows);
+        }
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request

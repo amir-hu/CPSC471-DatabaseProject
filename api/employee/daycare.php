@@ -16,8 +16,11 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") {
     exit();
 }
 
+// Get data in JSON format.
+$data = json_decode(file_get_contents("php://input"));
+
 // Check if any paramters were passed and return that else return an empty string.
-$empId = isset($_GET['EmployeeId']) ? $_GET['EmployeeId'] : '';
+$empId = !empty($data->EmployeeId) ? $data->EmployeeId : '';
 
 // Instantiate DB and connect
 $database = new Database();
