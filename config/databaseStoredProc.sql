@@ -85,8 +85,6 @@ BEGIN
        , dlyRprt.ReportId
        , dlyRprt.CaretakerEmployeeId
        , dlyRprt.ReportDate
-       , dlyRprt.StartTime
-       , dlyRprt.EndTime
        , dlyRprt.ReportComment
     FROM DAILY_REPORT as dlyRprt
     INNER JOIN
@@ -421,14 +419,12 @@ CREATE PROCEDURE AddReport(
     , IN rptID INT
     , IN empId INT  
     , IN rptDte DATE
-    , IN strtTme TIME    
-    , IN endtme TIME
     , IN rptCmmnt VARCHAR(1000)
     )
 
 BEGIN 
-    INSERT INTO DAILY_REPORT (ChildSIN, ReportId, CaretakerEmployeeId, ReportDate, StartTime, EndTime, ReportComment)
-    VALUES (chldSIN, rptId, empId, rptDte, strtTme, endTme, rptCmmnt);
+    INSERT INTO DAILY_REPORT (ChildSIN, ReportId, CaretakerEmployeeId, ReportDate, ReportComment)
+    VALUES (chldSIN, rptId, empId, rptDte, rptCmmnt);
 END;
 
 
@@ -448,8 +444,6 @@ CREATE PROCEDURE CaretakerGetDailyReport(
 BEGIN 
     SELECT
          ChildSIN
-       , StartTime
-       , EndTime
        , ReportComment
     FROM DAILY_REPORT
     WHERE ChildSIN = chldSIN
