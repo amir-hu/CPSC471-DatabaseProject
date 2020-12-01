@@ -14,6 +14,24 @@ class Database {
     private $database;
     private $connection;
 
+
+    //REFRENCE: https://www.php.net/manual/en/features.http-auth.php#73386
+    public function authenticate(){
+        $valid_passwords = array ("A" => "Hakuna","Metroid" => "Prime","Erin" => "Matata");
+        $valid_users = array_keys($valid_passwords);
+
+        $user = $_SERVER['PHP_AUTH_USER'];
+        $pass = $_SERVER['PHP_AUTH_PW'];
+
+        $validated = (in_array($user, $valid_users)) && ($pass == $valid_passwords[$user]);
+
+        if (!$validated) {
+            header('WWW-Authenticate: Basic realm="My Realm"');
+            http_response_code(401);
+            die ("Not authorized");
+            }
+    }
+
     public function connect() {
 
         // Navigate to the current directory and open sql script. (C:\AppServ\www\CPSC471-DatabaseProject\config)

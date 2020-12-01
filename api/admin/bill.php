@@ -29,6 +29,7 @@ $amtPending = !empty($data->AmountPending) ? $data->AmountPending : '';
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
+$database->authenticate();
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
 $sql = 'CALL CreateBill(:billId, :empId, :pmntMethod, :amtPending)';

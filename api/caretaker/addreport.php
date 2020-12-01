@@ -36,6 +36,7 @@ $rptCmmnt = !empty($data->ReportComment) ? $data->ReportComment : NULL;
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
+$database->authenticate();
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
 $sql = 'CALL AddReport(:chldSIN, :rptID, :empId, :rptDte, :rptCmmnt)';

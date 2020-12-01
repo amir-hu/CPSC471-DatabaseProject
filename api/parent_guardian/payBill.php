@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
-
+$database->authenticate();
 // Get data that is gonna be in JSON format.
 $data = json_decode(file_get_contents("php://input"));
 
