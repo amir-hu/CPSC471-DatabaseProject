@@ -4,9 +4,13 @@
 │   │   ├── bill.php
 │   │   ├── removeEmployee.php
 │   │   ├── waitlist.php
+│   ├── caretaker
+│   ├── child
 │   ├── daycare
 │   ├── employee
-│   └── person
+│   ├── parent_guardian
+│   ├── person
+│   └── room
 ├── config
 │   ├── Database.php - Connecting API to MySQL database
 │   ├── database.sql - SQL script for the database tables
