@@ -47,6 +47,7 @@ $daycareAddress = isset($_GET['DaycareAddress']) ? $_GET['DaycareAddress'] : die
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
+$database->authenticate();
 
 // SQL statement to call the stored proc
 // Positional paramaters. Act as placeholders.

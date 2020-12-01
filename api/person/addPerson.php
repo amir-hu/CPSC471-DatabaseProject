@@ -37,6 +37,7 @@ $phnNum = !empty($data->PhoneNum) ? $data->PhoneNum : '';
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
+$database->authenticate();
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
 $sql = 'CALL AddPerson(:personSIN, :firstName, :lastName, :gender, :addrUnitNum, :addrStreet, :addrCity, :addrPostalCode, :startDay, :startMonth, :startYear, :phnNum)';

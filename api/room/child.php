@@ -27,6 +27,7 @@ $roomId = !empty($data->RoomId) ? $data->RoomId : '';
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
+$database->authenticate();
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
 $sql = 'CALL AssignChild(:childSIN, :roomId)';
