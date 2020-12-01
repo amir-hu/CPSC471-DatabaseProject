@@ -12,7 +12,8 @@ include_once '../../config/Database.php'; // Bring in database
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     // Set response code - 405 Method not allowed
     http_response_code(405);
-    echo 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed';
+    $message = array('Message' => 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed.');
+    echo json_encode($message);
     exit();
 }
 
@@ -52,7 +53,8 @@ if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to add to waitlist. Data is incomplete.';
+    $message = array('Message' => 'Unable to add to waitlist. Data is incomplete.');
+    echo json_encode($message);
 
 // Check data type
 }else if (ctype_digit($childName) || ctype_digit($familyName) || !(is_numeric($adminEmpId)) ) {
@@ -60,7 +62,8 @@ if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to add to waitlist. Data type is not correct.';
+    $message = array('Message' => 'Unable to add to waitlist. Data type is not correct.');
+    echo json_encode($message);
 
  // Make sure that the input length matches model
 }else if (strlen($childName) > 30 || strlen($familyName) > 30 || strlen($adminEmpId) > 11) {
@@ -68,7 +71,8 @@ if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to add to waitlist. Data does not match the defined model.';
+    $message = array('Message' => 'Unable to add to waitlist. Data length does not match the defined model.');
+    echo json_encode($message);
 
 }else {
 
@@ -78,13 +82,15 @@ if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
         // Set response code - 201 created
         http_response_code(201);
 
-        echo "Child added to waitlist.";
+        $message = array('Message' => 'Child added to waitlist.');
+        echo json_encode($message);
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
-        echo "Unable to add child to waitlist. " . $exception->getMessage();
+        $message = array('Message' => 'Unable to add child to waitlist. ' . $exception->getMessage());
+        echo json_encode($message);
     }
 }
 ?>

@@ -12,7 +12,8 @@ include_once '../../config/Database.php'; // Bring in database
 if ($_SERVER["REQUEST_METHOD"] != "DELETE") {
     // Set response code - 405 Method not allowed
     http_response_code(405);
-    echo 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed';
+    $message = array('Message' => 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed.');
+    echo json_encode($message);
     exit();
 }
 
@@ -46,7 +47,8 @@ if (empty($empId)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to remove employee. Data is incomplete.';
+    $message = array('Message' => 'Unable to remove employee. Data is incomplete.');
+    echo json_encode($message);
 
 // Check data type
 }else if (!(is_numeric($empId)) ) {
@@ -54,7 +56,8 @@ if (empty($empId)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to remove employee. Data type is not correct.';
+    $message = array('Message' => 'Unable to remove employee. Data type is not correct.');
+    echo json_encode($message);
 
  // Make sure that the input data types (field type, length, etc.) matches model
 }else if (strlen($empId) > 11) {
@@ -62,7 +65,8 @@ if (empty($empId)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to remove employee. Data does not match the defined model.';
+    $message = array('Message' => 'Unable to remove employee. Data length does not match the defined model.');
+    echo json_encode($message);
 
 }else {
 
@@ -73,19 +77,22 @@ if (empty($empId)) {
         // Get row count
         $numOfRecords = $stmt->rowCount();
         if ($numOfRecords == 0) {
-            echo 'No employee with that id. Nothing was removed.';
+            $message = array('Message' => 'No employee with that id. Nothing was removed.');
+            echo json_encode($message);
         }
         else {
             // Set response code - 200 ok
             http_response_code(200);
-            echo "Employee has been removed.";
+            $message = array('Message' => 'Employee has been removed.');
+            echo json_encode($message);
         }
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
-        echo "Unable to remove employee. " . $exception->getMessage();
+        $message = array('Message' => 'Unable to remove employee. ' . $exception->getMessage());
+        echo json_encode($message);
     }
 }
 ?>

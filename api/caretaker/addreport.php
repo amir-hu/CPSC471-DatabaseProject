@@ -18,7 +18,8 @@ include_once '../../config/Database.php'; // Bring in database
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     // Set response code - 405 Method not allowed
     http_response_code(405);
-    echo 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed';
+    $message = array('Message' => 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed.');
+    echo json_encode($message);
     exit();
 }
 
@@ -64,7 +65,8 @@ if (empty($chldSIN) || empty($rptID) || empty($empId) || empty($rptDte)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo "\nUnable to add report. Data is incomplete.";
+    $message = array('Message' => "Unable to add report. Data is incomplete.");
+    echo json_encode($message);
 
     // Check data type
 }else if ( !(is_numeric($chldSIN) & is_numeric($rptID) & is_numeric($empId) & is_string($rptDte)) ) {
@@ -72,7 +74,8 @@ if (empty($chldSIN) || empty($rptID) || empty($empId) || empty($rptDte)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo "\nUnable to add report. Data type is not correct.";
+    $message = array('Message' => "Unable to add report. Data type is not correct.");
+    echo json_encode($message);
 
     // Make sure that the input length matches model
 }else if (strlen($chldSIN) > 11 || strlen($rptID) > 8 || strlen($empId) > 8 || strlen($rptDte) > 10 || strlen($rptCmmnt) > 100) {
@@ -80,7 +83,8 @@ if (empty($chldSIN) || empty($rptID) || empty($empId) || empty($rptDte)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo "\nUnable to add report. Data does not match the defined model.";
+    $message = array('Message' => "Unable to add report. Data length does not match the defined model.");
+    echo json_encode($message);
 
 }else {
 
@@ -90,13 +94,15 @@ if (empty($chldSIN) || empty($rptID) || empty($empId) || empty($rptDte)) {
         // Set response code - 201 Created
         http_response_code(201);
 
-        echo "\nReport has been added.";
+        $message = array('Message' => "Report has been added.");
+        echo json_encode($message);
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
-        echo "\nUnable to add report. " . $exception->getMessage();
+        $message = array('Message' => "Unable to add report. " . $exception->getMessage());
+        echo json_encode($message);
     }
 }
 ?>

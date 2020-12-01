@@ -35,12 +35,15 @@ class Database {
             $this->connection = new PDO('mysql:host=' . $this->servername . ';dbname=' . $this->database, $this->username, $this->password);
             // Set error mode. Get exception when we create queries in case something goes wrong
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo 'Successfully connected to the database.';
+            
+            //$message = array('Message' => 'Successfully connected to the database.');
+            //echo json_encode($message);
 
         }
         catch(PDOException $exception) {
 
-            echo 'Connection Error: ' . $exception->getMessage();
+            $message = array('Message' => 'Connection Error: ' . $exception->getMessage());
+            echo json_encode($message);
         }
 
         return $this->connection;

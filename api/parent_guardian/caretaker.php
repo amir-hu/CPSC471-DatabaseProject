@@ -12,7 +12,8 @@ include_once '../../config/Database.php'; // Bring in database
 if ($_SERVER["REQUEST_METHOD"] != "GET") {
     // Set response code - 405 Method not allowed
     http_response_code(405);
-    echo 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed';
+    $message = array('Message' => 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed.');
+    echo json_encode($message);
     exit();
 }
 
@@ -26,34 +27,36 @@ $sql = 'CALL SelectCaretaker()';
 // Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
 
-    // Execute stored procedure
-    try {
-        $stmt->execute();
+// Execute stored procedure
+try {
+    $stmt->execute();
 
-        // Get row count
-        $numOfRecords = $stmt->rowCount();
-        if ($numOfRecords == 0) {
-            echo 'No caretakers.';
-        }
-        else {
-            // Set response code - 200 ok
-            http_response_code(200);
-
-            // Returns all rows as an object
-            $caretakerRows = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-            // Turn to JSON & output
-            echo json_encode($caretakerRows);
-        }
-
-        $stmt->closeCursor();
-
+    // Get row count
+    $numOfRecords = $stmt->rowCount();
+    if ($numOfRecords == 0) {
+        $message = array('Message' => 'No caretakers.');
+        echo json_encode($message);
     }
-    catch(PDOException $exception) {
-        // Set response code - 400 bad request
-        // Show error if something goes wrong.
-        http_response_code(400);
-        echo "Unable to retrieve list. " . $exception->getMessage();
+    else {
+        // Set response code - 200 ok
+        http_response_code(200);
+
+        // Returns all rows as an object
+        $caretakerRows = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        // Turn to JSON & output
+        echo json_encode($caretakerRows);
     }
+
+    $stmt->closeCursor();
+
+}
+catch(PDOException $exception) {
+    // Set response code - 400 bad request
+    // Show error if something goes wrong.
+    http_response_code(400);
+    $message = array('Message' => 'Unable to retrieve list.' . $exception->getMessage());
+    echo json_encode($message);
+}
 
 ?>

@@ -12,7 +12,8 @@ include_once '../../config/Database.php'; // Bring in database
 if ($_SERVER["REQUEST_METHOD"] != "GET") {
     // Set response code - 405 Method not allowed
     http_response_code(405);
-    echo 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed';
+    $message = array('Message' => 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed.');
+    echo json_encode($message);
     exit();
 }
 
@@ -42,7 +43,8 @@ if (empty($prntSIN)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to retrive child. Data is incomplete.';
+    $message = array('Message' => 'Unable to retrive child. Data is incomplete.');
+    echo json_encode($message);
 
     // Check data type
 }else if (!(is_numeric($prntSIN)) ) {
@@ -50,7 +52,8 @@ if (empty($prntSIN)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to retrive child. Data type is not correct.';
+    $message = array('Message' => 'Unable to retrive child. Data type is not correct.');
+    echo json_encode($message);
 
     // Make sure that the input data types (field type, length, etc.) matches model
 }else if (strlen($prntSIN) > 8) {
@@ -58,7 +61,8 @@ if (empty($prntSIN)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to retrive child. Data does not match the defined model.';
+    $message = array('Message' => 'Unable to retrive child. Data length does not match the defined model.');
+    echo json_encode($message);
 
 } else {
 
@@ -72,7 +76,8 @@ if (empty($prntSIN)) {
         // Get row count
         $numOfRecords = $stmt->rowCount();
         if ($numOfRecords == 0) {
-            echo 'No children with that parent SIN.';
+            $message = array('Message' => 'No children with that parent SIN.');
+            echo json_encode($message);
         }
         else {
             // Set response code - 200 ok
@@ -92,7 +97,8 @@ if (empty($prntSIN)) {
         // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
-        echo "Unable to retrieve list. " . $exception->getMessage();
+        $message = array('Message' => "Unable to retrieve list. " . $exception->getMessage());
+        echo json_encode($message);
     }
 }
 ?>

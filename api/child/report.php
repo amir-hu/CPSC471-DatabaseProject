@@ -12,7 +12,8 @@ include_once '../../config/Database.php'; // Bring in database
 if ($_SERVER["REQUEST_METHOD"] != "GET") {
     // Set response code - 405 Method not allowed
     http_response_code(405);
-    echo 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed';
+    $message = array('Message' => 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed.');
+    echo json_encode($message);
     exit();
 }
 
@@ -46,7 +47,8 @@ if (empty($childSIN)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get reports. Data is incomplete.';
+    $message = array('Message' => 'Unable to get reports. Data is incomplete.');
+    echo json_encode($message);
 
 // Check data type
 }else if (!(is_numeric($childSIN))) {
@@ -54,7 +56,8 @@ if (empty($childSIN)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get reports. Data type is not correct.';
+    $message = array('Message' => 'Unable to get reports. Data type is not correct.');
+    echo json_encode($message);
 
  // Make sure that the input length matches model
 }else if (strlen($childSIN) > 8 ) {
@@ -62,7 +65,8 @@ if (empty($childSIN)) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get reports. Data does not match the defined model.';
+    $message = array('Message' => 'Unable to get reports. Data length does not match the defined model.');
+    echo json_encode($message);
 
 }else {
 
@@ -73,7 +77,8 @@ if (empty($childSIN)) {
         // Get row count
         $numOfRecords = $stmt->rowCount();
         if ($numOfRecords == 0) {
-            echo 'No report for child with that SIN.';
+            $message = array('Message' => 'No report for child with that SIN.');
+            echo json_encode($message);
         }
         else {
             // Set response code - 200 ok
@@ -92,7 +97,8 @@ if (empty($childSIN)) {
         // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
-        echo "Unable to get reports. " . $exception->getMessage();
+        $message = array('Message' => "Unable to get reports. " . $exception->getMessage());
+        echo json_encode($message);
     }
 }
 ?>

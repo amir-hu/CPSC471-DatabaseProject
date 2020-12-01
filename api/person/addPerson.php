@@ -12,7 +12,8 @@ include_once '../../config/Database.php'; // Bring in database
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     // Set response code - 405 Method not allowed
     http_response_code(405);
-    echo 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed';
+    $message = array('Message' => 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed.');
+    echo json_encode($message);
     exit();
 }
 
@@ -81,7 +82,8 @@ if (empty($personSIN) || empty($firstName) || empty($lastName) || empty($gender)
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to add person. Data is incomplete.';
+    $message = array('Message' => 'Unable to add person. Data is incomplete.');
+    echo json_encode($message);
 
     // Check data type
 }else if ( !is_numeric($personSIN) || ctype_digit($firstName) || ctype_digit($lastName) || ctype_digit($gender)
@@ -91,7 +93,8 @@ if (empty($personSIN) || empty($firstName) || empty($lastName) || empty($gender)
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to add person. Data type is not correct.';
+    $message = array('Message' => 'Unable to add person. Data type is not correct.');
+    echo json_encode($message);
 
     // Make sure that the input length matches model
 }else if ( strlen($personSIN) > 8 || strlen($firstName) > 30 || strlen($lastName) > 30 || strlen($gender) > 30
@@ -101,7 +104,8 @@ if (empty($personSIN) || empty($firstName) || empty($lastName) || empty($gender)
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to add person. Data does not match the defined model.';
+    $message = array('Message' => 'Unable to add person. Data length does not match the defined model.');
+    echo json_encode($message);
 
 }else {
 
@@ -111,13 +115,15 @@ if (empty($personSIN) || empty($firstName) || empty($lastName) || empty($gender)
         // Set response code - 201 created
         http_response_code(201);
 
-        echo "Person has been added.";
+        $message = array('Message' => "Person has been added.");
+        echo json_encode($message);
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
-        echo "Unable to add person. " . $exception->getMessage();
+        $message = array('Message' => "Unable to add person. " . $exception->getMessage());
+        echo json_encode($message);
     }
 }
 ?>

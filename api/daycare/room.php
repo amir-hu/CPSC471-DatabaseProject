@@ -12,7 +12,8 @@ include_once '../../config/Database.php'; // Bring in database
 if ($_SERVER["REQUEST_METHOD"] != "GET") {
     // Set response code - 405 Method not allowed
     http_response_code(405);
-    echo 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed';
+    $message = array('Message' => 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed.');
+    echo json_encode($message);
     exit();
 }
 
@@ -51,7 +52,8 @@ if (empty($daycareName) || empty($daycareAddress) ) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get room. Data is incomplete.';
+    $message = array('Message' => 'Unable to get room. Data is incomplete.');
+    echo json_encode($message);
 
     // Check data type
 }else if (ctype_digit($daycareName)) {
@@ -59,7 +61,8 @@ if (empty($daycareName) || empty($daycareAddress) ) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get room. Data type is not correct.';
+    $message = array('Message' => 'Unable to get room. Data type is not correct.');
+    echo json_encode($message);
 
     // Make sure that the input length matches model
 }else if (strlen($daycareName) > 100 || strlen($daycareAddress) > 100 ) {
@@ -67,7 +70,8 @@ if (empty($daycareName) || empty($daycareAddress) ) {
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get room. Data does not match the defined model.';
+    $message = array('Message' => 'Unable to get room. Data length does not match the defined model.');
+    echo json_encode($message);
 
 }else {
 
@@ -78,7 +82,8 @@ if (empty($daycareName) || empty($daycareAddress) ) {
         // Get row count
         $numOfRecords = $stmt->rowCount();
         if ($numOfRecords == 0) {
-            echo 'No room for that daycare.';
+            $message = array('Message' => 'No room for that daycare.');
+            echo json_encode($message);
         }
         else {
             // Set response code - 200 ok
@@ -95,7 +100,8 @@ if (empty($daycareName) || empty($daycareAddress) ) {
         // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
-        echo "Unable to get room. " . $exception->getMessage();
+        $message = array('Message' => "Unable to get room. " . $exception->getMessage());
+        echo json_encode($message);
     }
 }
 ?>
