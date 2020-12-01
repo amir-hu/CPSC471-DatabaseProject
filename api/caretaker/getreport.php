@@ -1,5 +1,4 @@
 <?php
-
 // Required HTTP headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -19,72 +18,85 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") {
 $data = json_decode(file_get_contents("php://input"));
 
 // Check if any paramters were passed and return that else return an empty string.
-$childSIN = !empty($data->childSIN) ? $data->childSIN : '';
+$crtkrId = !empty($data->crtkrId) ? $data->crtkrId : '';
+$chldSIN = !empty($data->chldSIN) ? $data->chldSIN : '';
+$rptdate = !empty($data->rptdate) ? $data->rptdate : '';
 
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
-$sql = 'CALL ChildGetRoom(:childSIN)';
+$sql = 'CALL CaretakerGetDailyReport(:crtkrId, :chldSIN, :rptdate)';
 
 // Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
 
 // Clean up and sanitize data: remove html characters and strip any tags
-$childSIN = htmlspecialchars(strip_tags($childSIN));
+$crtkrId = htmlspecialchars(strip_tags($crtkrId));
+$chldSIN = htmlspecialchars(strip_tags($chldSIN));
+$rptdate = htmlspecialchars(strip_tags($rptdate));
 
 // Bind data
-$stmt->bindParam(':childSIN', $childSIN);
+$stmt->bindParam(':crtkrId', $crtkrId);
+$stmt->bindParam(':chldSIN', $chldSIN);
+$stmt->bindParam(':rptdate', $rptdate);
 
 // Validate request:
 
 // Check if the data is empty
-if (empty($childSIN)) {
+if ( empty($crtkrId) || empty($chldSIN)|| empty($rptdate)) {
 
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get room. Data is incomplete.';
+    echo "\nUnable to get reports. Data is incomplete.";
 
 // Check data type
-}else if (!(is_string($childSIN))) {
+}else if ( !(is_numeric($crtkrId)) || !(is_string($chldSIN)) || !(is_string($rptdate))) {
 
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get room. Data type is not correct.';
+    echo "\nUnable to get reports. Data type is not correct.";
 
  // Make sure that the input length matches model
-}else if (strlen($childSIN) > 8 ) {
+}else if (strlen($chldSIN) > 8 || strlen($crtkrId) > 11 || strlen($rptdate) > 10 ) {
 
     // Set response code - 400 bad request
     http_response_code(400);
 
-    echo 'Unable to get room. Data does not match the defined model.';
+    echo "\nUnable to get reports. Data does not match the defined model.";
 
 }else {
 
     // Execute stored procedure
     try {
+
         $stmt->execute();
 
+        // Set response code - 200 OK     
+        http_response_code(200);
         // Returns all rows as an object
-        $roomRows = $stmt->fetchAll(PDO::FETCH_OBJ);
-        
-        // Turn to JSON & output
-        echo json_encode($roomRows);
+        $numOfRecords = $stmt->rowCount();
+        if ($numOfRecords ==0){
+            echo "\nNo reports for the specified parameters.";
+        }
+        else {
+            $reportRows = $stmt->fetchAll(PDO::FETCH_OBJ);
+            
+            // Turn to JSON & output
+            echo json_encode($reportRows);
+        }
         
         $stmt->closeCursor();
 
-        // Set response code - 200 OK       
-        http_response_code(200);
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request
         // Show error if something goes wrong.
         http_response_code(400);
-        echo "Unable to get room. " . $exception->getMessage();
+        echo "Unable to get reports. Error:\n" . $exception->getMessage();
     }
 }
 ?>
