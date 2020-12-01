@@ -16,8 +16,10 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") {
     exit();
 }
 
+$data = json_decode(file_get_contents("php://input"));
+
 // Check if any paramters were passed and return that else return an empty string.
-$childSIN = isset($_GET['childSIN']) ? $_GET['childSIN'] : '';
+$childSIN = !empty($data->childSIN) ? $data->childSIN : '';
 
 // Instantiate DB and connect
 $database = new Database();
@@ -75,8 +77,8 @@ if (empty($childSIN)) {
         
         $stmt->closeCursor();
 
-        // Set response code - 201 created        
-        http_response_code(201);
+        // Set response code - 200 OK       
+        http_response_code(200);
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request
