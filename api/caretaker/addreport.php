@@ -2,7 +2,7 @@
 //CREATE PROCEDURE AddReport(
 //    IN chldSIN VARCHAR(8)
 //    , IN rptID INT
-//    , IN empId INT  
+//    , IN empId INT
 //    , IN rptDte DATE
 //   , IN rptCmmnt VARCHAR(1000)
 //    )
@@ -26,11 +26,11 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 $data = json_decode(file_get_contents("php://input"));
 
 // Check if any paramters were passed and return that else return an empty string.
-$chldSIN = !empty($data->chldSIN) ? $data->chldSIN : '';
-$rptID = !empty($data->rptID) ? $data->rptID : '';
-$empId = !empty($data->empId) ? $data->empId : '';
-$rptDte = !empty($data->rptDte) ? $data->rptDte : '';
-$rptCmmnt = !empty($data->rptCmmnt) ? $data->rptCmmnt : '';
+$chldSIN = !empty($data->ChildSIN) ? $data->ChildSIN : '';
+$rptID = !empty($data->ReportId) ? $data->ReportId : '';
+$empId = !empty($data->EmployeeId) ? $data->EmployeeId : '';
+$rptDte = !empty($data->ReportDate) ? $data->ReportDate : '';
+$rptCmmnt = !empty($data->ReportComment) ? $data->ReportComment : NULL;
 
 // Instantiate DB and connect
 $database = new Database();
@@ -47,7 +47,7 @@ $chldSIN = htmlspecialchars(strip_tags($chldSIN));
 $rptID = htmlspecialchars(strip_tags($rptID));
 $empId = htmlspecialchars(strip_tags($empId));
 $rptDte = htmlspecialchars(strip_tags($rptDte));
-$rptCmmnt = htmlspecialchars(strip_tags($rptCmmnt));
+$rptCmmnt = $rptCmmnt == NULL ? htmlspecialchars(strip_tags($rptCmmnt)) : NULL;
 
 // Bind data
 $stmt->bindParam(':chldSIN', $chldSIN);
@@ -67,7 +67,7 @@ if (empty($chldSIN) || empty($rptID) || empty($empId) || empty($rptDte)) {
     echo "\nUnable to add report. Data is incomplete.";
 
     // Check data type
-}else if ( !(is_numeric($chldSIN) & is_numeric($rptID) & is_numeric($empId) & is_string($rptDte) & is_string($rptCmmnt)) ) {
+}else if ( !(is_numeric($chldSIN) & is_numeric($rptID) & is_numeric($empId) & is_string($rptDte)) ) {
 
     // Set response code - 400 bad request
     http_response_code(400);
