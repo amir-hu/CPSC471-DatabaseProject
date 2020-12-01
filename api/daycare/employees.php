@@ -74,8 +74,8 @@ if (empty($daycareName) || empty($daycareAddress) ) {
 
         $empRows = $stmt->fetchAll(PDO::FETCH_OBJ);
         echo json_encode($empRows);
-        // Set response code - 201 created
-        http_response_code(201);        
+        // Set response code - 200 created
+        http_response_code(200);        
     }
     catch(PDOException $exception) {
         // Set response code - 400 bad request
