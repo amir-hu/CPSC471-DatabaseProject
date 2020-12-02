@@ -125,16 +125,23 @@ END;
 
 /* Table: PARENT_GUARDIAN
  * Method: SelectCaretaker()
- * Description: View all caretakers and their info
+ * Description: View all caretakers and their info the specified daycare
+ * @param dycrName - Name of the daycare
+ * @param dycrAddr - The address of the daycare
  */
 DROP PROCEDURE IF EXISTS SelectCaretaker;
-CREATE PROCEDURE SelectCaretaker ()
+CREATE PROCEDURE SelectCaretaker (
+      IN dycrName VARCHAR(100)
+    , IN dycrAddr VARCHAR(100)
+    )
 
 BEGIN
     SELECT
          prsn.FirstName
        , prsn.LastName
        , prsn.Gender
+       , emp.DaycareName
+       , emp.DaycareAddress
        , prsn.StartDay
        , prsn.StartMonth
        , prsn.StartYear
@@ -146,7 +153,12 @@ BEGIN
          ON prsn.SIN = crtkr.SIN
     INNER JOIN
          CARETAKER_SPECIALIZATION as crtkrSpclztn
-         ON crtkrSpclztn.CaretakerSIN = crtkr.SIN;
+         ON crtkrSpclztn.CaretakerSIN = crtkr.SIN
+    INNER JOIN
+         EMPLOYEE as emp
+         ON emp.EmployeeId = crtkr.EmployeeId
+    WHERE emp.DaycareName = dycrName
+        AND emp.DaycareAddress = dycrAddr;
 END;
 
 
