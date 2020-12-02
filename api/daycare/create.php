@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
-$database->authenticate();
+$database->authenticate("high");
 
 // ---------------------------------------------------------- CONVERT TO JSON FORMAT ---------------------------------------------------------- //
 // Get data that is gonna be in JSON format.

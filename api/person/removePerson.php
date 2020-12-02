@@ -26,7 +26,7 @@ $prsnSIN = !empty($data->SIN) ? $data->SIN : '';
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
-$database->authenticate();
+$database->authenticate("low");
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
 $sql = 'CALL RemovePerson(:prsnSIN)';
