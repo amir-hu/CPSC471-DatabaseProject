@@ -27,6 +27,7 @@ $rptdate = !empty($data->ReportDate) ? $data->ReportDate : '';
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
+$database->authenticate("med");
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
 $sql = 'CALL CaretakerGetDailyReport(:crtkrId, :chldSIN, :rptdate)';
