@@ -54,9 +54,9 @@ $addrUnitNum = htmlspecialchars(strip_tags($addrUnitNum));
 $addrStreet = htmlspecialchars(strip_tags($addrStreet));
 $addrCity = htmlspecialchars(strip_tags($addrCity));
 $addrPostalCode = htmlspecialchars(strip_tags($addrPostalCode));
-$startDay = $startDay == NULL ? htmlspecialchars(strip_tags($startDay)) : NULL;
-$startMonth =  $startMonth == NULL ? htmlspecialchars(strip_tags($startMonth)) : NULL;
-$startYear = $startYear == NULL ? htmlspecialchars(strip_tags($startYear)) : NULL;
+$startDay = !is_null($startDay) ? htmlspecialchars(strip_tags($startDay)) : NULL;
+$startMonth = !is_null($startMonth) ? htmlspecialchars(strip_tags($startMonth)) : NULL;
+$startYear = !is_null($startYear) ? htmlspecialchars(strip_tags($startYear)) : NULL;
 $phnNum = htmlspecialchars(strip_tags($phnNum));
 
 // Bind data

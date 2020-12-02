@@ -49,7 +49,7 @@ $chldSIN = htmlspecialchars(strip_tags($chldSIN));
 $rptID = htmlspecialchars(strip_tags($rptID));
 $empId = htmlspecialchars(strip_tags($empId));
 $rptDte = htmlspecialchars(strip_tags($rptDte));
-$rptCmmnt = $rptCmmnt == NULL ? htmlspecialchars(strip_tags($rptCmmnt)) : NULL;
+$rptCmmnt = !is_null($rptCmmnt) ? htmlspecialchars(strip_tags($rptCmmnt)) : NULL;
 
 // Bind data
 $stmt->bindParam(':chldSIN', $chldSIN);

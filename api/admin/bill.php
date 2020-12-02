@@ -40,7 +40,7 @@ $stmt = $db->prepare($sql);
 // Clean up and sanitize data: remove html characters and strip any tags
 $billId = htmlspecialchars(strip_tags($billId));
 $empId = htmlspecialchars(strip_tags($empId));
-$pmntMethod = $pmntMethod != NULL ? htmlspecialchars(strip_tags($pmntMethod)) : NULL;
+$pmntMethod = !is_null($pmntMethod) ? htmlspecialchars(strip_tags($pmntMethod)) : NULL;
 $amtPending = htmlspecialchars(strip_tags($amtPending));
 
 // Bind data
