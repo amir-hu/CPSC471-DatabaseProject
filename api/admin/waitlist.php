@@ -21,8 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 $data = json_decode(file_get_contents("php://input"));
 
 // Check if any paramters were passed and return that else return an empty string.
-$childName = !empty($data->ChildName) ? $data->ChildName : '';
-$familyName = !empty($data->FamilyName) ? $data->FamilyName : '';
+$childFirstName = !empty($data->ChildFirstName) ? $data->ChildFirstName : '';
+$childLastName = !empty($data->ChildLastName) ? $data->ChildLastName : '';
 $adminEmpId = !empty($data->SubmittedById) ? $data->SubmittedById : '';
 
 // Instantiate DB and connect
@@ -31,25 +31,25 @@ $db = $database->connect();
 $database->authenticate();
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
-$sql = 'CALL AddToWaitlist(:childName, :familyName, :adminEmpId)';
+$sql = 'CALL AddToWaitlist(:childFirstName, :childLastName, :adminEmpId)';
 
 // Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
 
 // Clean up and sanitize data: remove html characters and strip any tags
-$childName = htmlspecialchars(strip_tags($childName));
-$familyName = htmlspecialchars(strip_tags($familyName));
+$childFirstName = htmlspecialchars(strip_tags($childFirstName));
+$childLastName = htmlspecialchars(strip_tags($childLastName));
 $adminEmpId = htmlspecialchars(strip_tags($adminEmpId));
 
 // Bind data
-$stmt->bindParam(':childName', $childName);
-$stmt->bindParam(':familyName', $familyName);
+$stmt->bindParam(':childFirstName', $childFirstName);
+$stmt->bindParam(':childLastName', $childLastName);
 $stmt->bindParam(':adminEmpId', $adminEmpId);
 
 // Validate request:
 
 // Check if the data is empty
-if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
+if (empty($childFirstName) || empty($childLastName) || empty($adminEmpId)) {
 
     // Set response code - 400 bad request
     http_response_code(400);
@@ -57,8 +57,8 @@ if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
     $message = array('Message' => 'Unable to add to waitlist. Data is incomplete.');
     echo json_encode($message);
 
-// Check data type
-}else if (ctype_digit($childName) || ctype_digit($familyName) || !(is_numeric($adminEmpId)) ) {
+    // Check data type
+}else if (ctype_digit($childFirstName) || ctype_digit($childLastName) || !(is_numeric($adminEmpId)) ) {
 
     // Set response code - 400 bad request
     http_response_code(400);
@@ -66,8 +66,8 @@ if (empty($childName) || empty($familyName) || empty($adminEmpId)) {
     $message = array('Message' => 'Unable to add to waitlist. Data type is not correct.');
     echo json_encode($message);
 
- // Make sure that the input length matches model
-}else if (strlen($childName) > 30 || strlen($familyName) > 30 || strlen($adminEmpId) > 11) {
+    // Make sure that the input length matches model
+}else if (strlen($childFirstName) > 30 || strlen($childLastName) > 30 || strlen($adminEmpId) > 11) {
 
     // Set response code - 400 bad request
     http_response_code(400);

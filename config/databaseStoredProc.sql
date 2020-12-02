@@ -205,14 +205,14 @@ END;
  */
 DROP PROCEDURE IF EXISTS AddToWaitlist;
 CREATE PROCEDURE AddToWaitlist(
-      IN chldnme VARCHAR(30)
-    , IN fmlyNme VARCHAR(30)
+      IN chldFrstNme VARCHAR(30)
+    , IN chldLstNme VARCHAR(30)
     , IN empId INT
     )
     
 BEGIN
-    INSERT INTO WAITLIST (ChildName, FamilyName, SubmittedById)
-    VALUES (chldnme, fmlyNme, empId);
+    INSERT INTO WAITLIST (ChildFirstName, ChildLastName, SubmittedById)
+    VALUES (chldFrstNme, chldLstNme, empId);
 END;
 
 
