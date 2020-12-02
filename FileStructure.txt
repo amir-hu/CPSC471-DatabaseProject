@@ -1,4 +1,4 @@
-﻿├── api - Contains endpoints which execute stored procecures 
+﻿├── api - Contains endpoints which execute stored procedures 
 │   ├── admin
 │   │   ├── addEmployee.php
 │   │   ├── bill.php
