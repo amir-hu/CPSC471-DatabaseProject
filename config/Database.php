@@ -28,7 +28,9 @@ class Database {
         if (!$validated) {
             header('WWW-Authenticate: Basic realm="My Realm"');
             http_response_code(401);
-            die ("Not authorized");
+            $message = array ("messsage" => "Not authorized");
+            echo json_encode($message);
+            die ();
             }
     }
 

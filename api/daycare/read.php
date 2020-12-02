@@ -41,7 +41,7 @@ header("Content-Type: application/json; charset=UTF-8");
 include_once '../../config/Database.php'; // Bring in database
 
 // Check if any paramters were passed and return that.
-$daycareName = isset($_GET['DaycareName']) ? $_GET['DaycareName'] : die();
+$daycareName = isset($_GET['DaycareName']) ? $_GET['DaycareName'] : die(); //why tho
 $daycareAddress = isset($_GET['DaycareAddress']) ? $_GET['DaycareAddress'] : die();
 
 // Instantiate DB and connect
