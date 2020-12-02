@@ -100,7 +100,7 @@ if (empty($personSIN) || empty($firstName) || empty($lastName) || empty($gender)
     // Make sure that the input length matches model
 }else if ( strlen($personSIN) > 8 || strlen($firstName) > 30 || strlen($lastName) > 30 || strlen($gender) > 30
             || strlen($addrUnitNum) > 11 || strlen($addrStreet) > 50 || strlen($addrCity) > 20 || strlen($addrPostalCode) > 20
-            || strlen($startDay) > 11 || strlen($startMonth) > 9 || strlen($startYear) > 11|| strlen($phnNum) > 20 ) {
+            || strlen($startDay) > 2 || strlen($startMonth) > 2 || strlen($startYear) > 4|| strlen($phnNum) > 20 ) {
 
     // Set response code - 400 bad request
     http_response_code(400);
