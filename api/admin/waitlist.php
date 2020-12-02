@@ -28,7 +28,7 @@ $adminEmpId = !empty($data->SubmittedById) ? $data->SubmittedById : '';
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
-$database->authenticate();
+$database->authenticate("high");
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
 $sql = 'CALL AddToWaitlist(:childFirstName, :childLastName, :adminEmpId)';

@@ -26,7 +26,7 @@ $empId = !empty($data->EmployeeId) ? $data->EmployeeId : '';
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
-$database->authenticate("high");
+$database->authenticate("med");
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
 $sql = 'CALL GetDaycare(:empId)';
