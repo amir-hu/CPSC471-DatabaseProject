@@ -27,7 +27,7 @@ $data = json_decode(file_get_contents("php://input"));
 // Check if any paramters were passed and return that else return an empty string.
 $billId = !empty($data->BillId) ? $data->BillId : '';
 $amountPending = !empty($data->AmountPending) ? $data->AmountPending : 0;
-$paymentMethod = !empty($data->PaymentMethod) ? $data->PaymentMethod : '';
+$paymentMethod = !empty($data->PaymentMethod) ? $data->PaymentMethod : NULL;
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
 $sql = 'CALL PayBill(:billId, :paymentMethod, :amountPending)';
@@ -38,7 +38,7 @@ $stmt = $db->prepare($sql);
 // Clean up and sanitize data: remove html characters and strip any tags
 $billId = htmlspecialchars(strip_tags($billId));
 $amountPending = htmlspecialchars(strip_tags($amountPending));
-$paymentMethod = htmlspecialchars(strip_tags($paymentMethod));
+$paymentMethod = !is_null($paymentMethod) ? htmlspecialchars(strip_tags($paymentMethod)) : NULL;
 
 // Bind data
 $stmt->bindParam(':billId', $billId);
@@ -48,7 +48,7 @@ $stmt->bindParam(':paymentMethod', $paymentMethod);
 // Validate request:
 
 // Check if the data is empty
-if (empty($billId) || empty($paymentMethod)) {
+if (empty($billId)) {
 
     // Set response code - 400 bad request
     http_response_code(400);
