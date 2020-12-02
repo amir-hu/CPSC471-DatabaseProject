@@ -116,7 +116,9 @@ BEGIN
     FROM CHILD as chld
     INNER JOIN
          ROOM as rm
-         ON chld.RoomId = rm.RoomId
+         ON rm.DaycareName = chld.DaycareName
+            AND rm.DaycareAddress = chld.DaycareAddress
+            AND chld.RoomId = rm.RoomId
     WHERE chld.SIN = childSIN;
 END;
 
