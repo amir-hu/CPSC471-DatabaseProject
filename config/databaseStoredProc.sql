@@ -300,6 +300,7 @@ END;
  * @param empSIN - SIN of new EmployeeID
  * @param empId - Employee ID
  * @param wrkHrs - Hours available to work
+ * @param hrlyRate - hourly rate of the employee
  */
 DROP PROCEDURE IF EXISTS AddEmployee;
 CREATE PROCEDURE AddEmployee(
@@ -308,11 +309,12 @@ CREATE PROCEDURE AddEmployee(
     , IN empSIN VARCHAR(8)
     , IN empId INT
     , IN wrkHrs DECIMAL(4,2)
+    , IN hrlyRate DECIMAL(5,2)
     )
 
 BEGIN 
-    INSERT INTO EMPLOYEE (DaycareName, DaycareAddress, SIN, EmployeeId, WorkHours)
-    VALUES (daycare, address, empSIN, empId, wrkHrs);
+    INSERT INTO EMPLOYEE (DaycareName, DaycareAddress, SIN, EmployeeId, WorkHours, HourlyRate)
+    VALUES (daycare, address, empSIN, empId, wrkHrs, hrlyRate);
 END;
 
 
@@ -427,6 +429,7 @@ BEGIN
        , prsn.FirstName
        , prsn.LastName
        , emp.WorkHours
+       , emp.HourlyRate
     FROM EMPLOYEE as emp
     INNER JOIN
          PERSON as prsn

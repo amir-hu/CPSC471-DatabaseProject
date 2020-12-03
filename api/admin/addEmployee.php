@@ -26,6 +26,7 @@ $daycareAddress = !empty($data->DaycareAddress) ? $data->DaycareAddress : '';
 $empSIN= !empty($data->SIN) ? $data->SIN : '';
 $empId= !empty($data->EmployeeId) ? $data->EmployeeId : '';
 $workHours = !empty($data->WorkHours) ? $data->WorkHours : '';
+$hourlyRate = !empty($data->HourlyRate) ? $data->HourlyRate : '';
 
 // Instantiate DB and connect
 $database = new Database();
@@ -33,7 +34,7 @@ $db = $database->connect();
 $database->authenticate("high");
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
-$sql = 'CALL AddEmployee(:daycareName, :daycareAddress, :empSIN, :empId, :workHours)';
+$sql = 'CALL AddEmployee(:daycareName, :daycareAddress, :empSIN, :empId, :workHours, :hourlyRate)';
 
 // Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
@@ -44,6 +45,7 @@ $daycareAddress = htmlspecialchars(strip_tags($daycareAddress));
 $empSIN = htmlspecialchars(strip_tags($empSIN));
 $empId = htmlspecialchars(strip_tags($empId));
 $workHours =htmlspecialchars(strip_tags($workHours));
+$hourlyRate =htmlspecialchars(strip_tags($hourlyRate));
 
 // Bind data
 $stmt->bindParam(':daycareName', $daycareName);
@@ -51,11 +53,12 @@ $stmt->bindParam(':daycareAddress', $daycareAddress);
 $stmt->bindParam(':empSIN', $empSIN);
 $stmt->bindParam(':empId', $empId);
 $stmt->bindParam(':workHours', $workHours);
+$stmt->bindParam(':hourlyRate', $hourlyRate);
 
 // Validate request:
 
 // Check if the data is empty
-if (empty($daycareName) || empty($daycareAddress) || empty($empSIN) || empty($empId) || empty($workHours)) {
+if (empty($daycareName) || empty($daycareAddress) || empty($empSIN) || empty($empId) || empty($workHours) || empty($hourlyRate)) {
 
     // Set response code - 400 bad request
     http_response_code(400);
@@ -64,7 +67,7 @@ if (empty($daycareName) || empty($daycareAddress) || empty($empSIN) || empty($em
     echo json_encode($message);
 
     // Check data type
-}else if (ctype_digit($daycareName) || !(is_numeric($empSIN)) || !(is_numeric($empId)) || !(is_numeric($workHours)) ) {
+}else if (ctype_digit($daycareName) || !(is_numeric($empSIN) && is_numeric($empId) && is_numeric($workHours) && is_numeric($hourlyRate)) ) {
 
     // Set response code - 400 bad request
     http_response_code(400);
