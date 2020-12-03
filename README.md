@@ -19,7 +19,7 @@ CPSC 471 project for the Data Base Management Systems course at the University o
 1. Navigate to http://localhost/CPSC471-DatabaseProject/config/Install.php to setup the database and tables
 
 ## Changing The Database Configuration
-* [Install.php](config/install.php) runs a SQL script to create the database, tables and the stored procedures
+* [Install.php](config/Install.php) runs a SQL script to create the database, tables and the stored procedures
 * The name of the database created with the script is called ``childDaycare``
 * The configuration assumes that the username and password to phpMyAdmin is ``root``
 * This configuration can be changed to your own preference by following these steps:
