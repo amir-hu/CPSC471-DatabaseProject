@@ -290,6 +290,25 @@ BEGIN
     INSERT INTO BILL (BillId, CreatedById, PaymentMethod, AmountPending)
     VALUES (bill, empId, method, amount);
 END;
+
+
+/* Table: ADMIN
+ * Method: UpdateBill()
+ * Description: Update child bill
+ * @param bill - Id of bill
+ * @param amount - new amount of bill
+ */
+DROP PROCEDURE IF EXISTS UpdateBill;
+CREATE PROCEDURE UpdateBill(
+      IN bill INT
+    , IN amount DECIMAL(6,2)
+    )
+
+BEGIN 
+    UPDATE BILL
+    SET AmountPending = amount
+    WHERE BillId = bill;
+END;
  
 
 /* Table: ADMIN
