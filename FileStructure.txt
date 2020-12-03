@@ -15,7 +15,7 @@
 │   ├── Database.php - Connecting API to MySQL database
 │   ├── database.sql - SQL script for the database tables
 │   ├── databaseStoredProc.sql - SQL script for the stored procedures
-│   └── install.php - Script for setting up the database
+│   └── Install.php - Script for setting up the database
 ├── website - Web interface connecting to API
 │   ├── scripts
 │   │   ├── daycare.js
