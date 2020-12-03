@@ -8,9 +8,9 @@
 
 class Database {
 
-    private $servername = 'localhost';
-    private $username = 'root';
-    private $password = 'root';
+    protected $servername = 'localhost';
+    protected $username = 'root';
+    protected $password = 'root';
     private $database;
     private $connection;
 
