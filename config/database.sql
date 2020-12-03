@@ -233,9 +233,14 @@ INSERT INTO CHILD (SIN, CaretakerEmployeeId, ParentSIN, DateOfBirth, DaycareName
 
 INSERT INTO CONDITIONS VALUES ('11111111', 'Celiac Disease', 'Gluten Free Diet'), ('11111111', 'Asthma', 'Inhaler'), ('55566777', 'Asthma', 'Inhaler'), ('55566777', 'OCD', 'Monitor Actions');
 
-INSERT INTO DAILY_REPORT VALUES ('11111111', 1, 5555, '2020-01-01', 'Good job child'), ('55566777', 2, 5550, '2020-01-01', 'Bad child');
+INSERT INTO DAILY_REPORT (ChildSIN, ReportId, CaretakerEmployeeId, ReportDate, ReportComment)
+VALUES ('11111111', 1, 5555, '2020-01-01', 'Good job child'),
+       ('55566777', 2, 5550, '2020-01-01', 'Bad child');
 
-INSERT INTO INCIDENTS VALUES (2, 'Needs to be talked to about behaviour');
+INSERT INTO INCIDENTS (ReportId, ActionRequired)
+VALUES (1, NULL),
+       (2, 'Needs to be talked to about behaviour');
 
-INSERT INTO ACTIVITIES VALUES (1, 'Learned about space and aliens');
-
+INSERT INTO ACTIVITIES (ReportId, LessonsLearned)
+VALUES (1, 'Learned about space and aliens'),
+       (2, 'Learned about dinosaurs');

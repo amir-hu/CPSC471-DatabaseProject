@@ -106,7 +106,15 @@ BEGIN
        , dlyRprt.CaretakerEmployeeId
        , dlyRprt.ReportDate
        , dlyRprt.ReportComment
+       , actvts.LessonsLearned
+       , incdnts.ActionRequired
     FROM DAILY_REPORT as dlyRprt
+    INNER JOIN
+         ACTIVITIES as actvts
+         ON actvts.ReportId = dlyRprt.ReportId
+    INNER JOIN
+         INCIDENTS as incdnts
+         ON incdnts.ReportId = dlyRprt.ReportId
     INNER JOIN
         CHILD as chld
         ON chld.SIN = dlyRprt.ChildSIN
@@ -514,6 +522,8 @@ END;
  * @param strtTme - Start time of the report
  * @param endtme - End time of the report
  * @param rptCmmnt - Text of report
+ * @param lsnLrnd - Lessons learned for the day
+ * @param actnRqrd - Any action requried from the child
  */
 DROP PROCEDURE IF EXISTS AddReport;
 CREATE PROCEDURE AddReport(
@@ -522,11 +532,19 @@ CREATE PROCEDURE AddReport(
     , IN empId INT  
     , IN rptDte DATE
     , IN rptCmmnt VARCHAR(1000)
+    , IN lsnLrnd VARCHAR(100)
+    , IN actnRqrd VARCHAR(100)
     )
 
 BEGIN 
     INSERT INTO DAILY_REPORT (ChildSIN, ReportId, CaretakerEmployeeId, ReportDate, ReportComment)
     VALUES (chldSIN, rptId, empId, rptDte, rptCmmnt);
+
+    INSERT INTO ACTIVITIES (ReportId, LessonsLearned)
+    VALUES (rptID, lsnLrnd);
+
+    INSERT INTO INCIDENTS (ReportId, ActionRequired)
+    VALUES (rptID, actnRqrd);
 END;
 
 
@@ -545,9 +563,17 @@ CREATE PROCEDURE CaretakerGetDailyReport(
     )
 BEGIN 
     SELECT
-         ChildSIN
-       , ReportComment
-    FROM DAILY_REPORT
+         dlyRprt.ChildSIN
+       , dlyRprt.ReportComment
+       , actvts.LessonsLearned
+       , incdnts.ActionRequired
+    FROM DAILY_REPORT as dlyRprt
+    INNER JOIN
+         ACTIVITIES as actvts
+         ON actvts.ReportId = dlyRprt.ReportId
+    INNER JOIN
+         INCIDENTS as incdnts
+         ON incdnts.ReportId = dlyRprt.ReportId
     WHERE ChildSIN = chldSIN
         AND CaretakerEmployeeId = crtkrId
         AND ReportDate = rptdate;

@@ -32,6 +32,8 @@ $rptID = !empty($data->ReportId) ? $data->ReportId : '';
 $empId = !empty($data->EmployeeId) ? $data->EmployeeId : '';
 $rptDte = !empty($data->ReportDate) ? $data->ReportDate : '';
 $rptCmmnt = !empty($data->ReportComment) ? $data->ReportComment : NULL;
+$lessonsLearned = !empty($data->LessonsLearned) ? $data->LessonsLearned : NULL;
+$actionRequired = !empty($data->ActionRequired) ? $data->ActionRequired : NULL;
 
 // Instantiate DB and connect
 $database = new Database();
@@ -39,7 +41,7 @@ $db = $database->connect();
 $database->authenticate("med");
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
-$sql = 'CALL AddReport(:chldSIN, :rptID, :empId, :rptDte, :rptCmmnt)';
+$sql = 'CALL AddReport(:chldSIN, :rptID, :empId, :rptDte, :rptCmmnt, :lessonsLearned, :actionRequired)';
 
 // Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
@@ -50,6 +52,8 @@ $rptID = htmlspecialchars(strip_tags($rptID));
 $empId = htmlspecialchars(strip_tags($empId));
 $rptDte = htmlspecialchars(strip_tags($rptDte));
 $rptCmmnt = !is_null($rptCmmnt) ? htmlspecialchars(strip_tags($rptCmmnt)) : NULL;
+$lessonsLearned = !is_null($lessonsLearned) ? htmlspecialchars(strip_tags($lessonsLearned)) : NULL;
+$actionRequired = !is_null($actionRequired) ? htmlspecialchars(strip_tags($actionRequired)) : NULL;
 
 // Bind data
 $stmt->bindParam(':chldSIN', $chldSIN);
@@ -57,6 +61,8 @@ $stmt->bindParam(':rptID', $rptID);
 $stmt->bindParam(':empId', $empId);
 $stmt->bindParam(':rptDte', $rptDte);
 $stmt->bindParam(':rptCmmnt', $rptCmmnt);
+$stmt->bindParam(':lessonsLearned', $lessonsLearned);
+$stmt->bindParam(':actionRequired', $actionRequired);
 
 // Validate request:
 
@@ -79,7 +85,8 @@ if (empty($chldSIN) || empty($rptID) || empty($empId) || empty($rptDte)) {
     echo json_encode($message);
 
     // Make sure that the input length matches model
-}else if (strlen($chldSIN) > 11 || strlen($rptID) > 8 || strlen($empId) > 8 || strlen($rptDte) > 10 || strlen($rptCmmnt) > 100) {
+}else if (strlen($chldSIN) > 11 || strlen($rptID) > 8 || strlen($empId) > 8 || strlen($rptDte) > 10 || strlen($rptCmmnt) > 1000
+            || strlen($lessonsLearned) > 100 || strlen($actionRequired) > 100) {
 
     // Set response code - 400 bad request
     http_response_code(400);
