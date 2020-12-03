@@ -165,6 +165,7 @@ BEGIN
        , prsn.StartDay
        , prsn.StartMonth
        , prsn.StartYear
+       , crtkr.PastIncidents
        , crtkr.Availability
        , crtkrSpclztn.SpecializationType
     FROM CARETAKER as crtkr
