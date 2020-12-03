@@ -338,6 +338,29 @@ END;
 
 
 /* Table: ADMIN
+ * Method: UpdateEmployeePay()
+ * Description: Update employee payroll info
+ * @param empSIN - SIN of Employee
+ * @param wrkHrs - Hours available to work
+ * @param hrlyRate - new Hourly rate of the employee
+ */
+DROP PROCEDURE IF EXISTS UpdateEmployeePay;
+CREATE PROCEDURE UpdateEmployeePay(
+      IN empSIN VARCHAR(8)
+    , IN wrkHrs DECIMAL(4,2)
+    , IN hrlyRate DECIMAL(5,2)
+    )
+
+BEGIN
+    UPDATE EMPLOYEE
+    SET
+         WorkHours = wrkHrs
+       , HourlyRate = hrlyRate
+    WHERE SIN = empSIN;
+END;
+
+
+/* Table: ADMIN
  * Method: RemoveEmployee()
  * Description: Remove an employee
  * @param EmployeeId - ID of employee to remove
