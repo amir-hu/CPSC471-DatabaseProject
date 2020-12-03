@@ -40,6 +40,26 @@ END;
 
 
 /* Table: CHILD
+ * Method: AddMedicalCondition()
+ * Description: Gets all the conditions and treatments a child may have
+ * @param ChildSin - SIN of Child
+ * @param cndtnName - The name of the medical condition
+ * @param cndtnTrtmnt - What is used to treat the condition
+ */
+DROP PROCEDURE IF EXISTS AddMedicalCondition;
+CREATE PROCEDURE AddMedicalCondition (
+      IN chldSIN VARCHAR(8)
+    , IN cndtnName VARCHAR(100)
+    , IN cndtnTrtmnt VARCHAR(100)
+    )
+
+BEGIN
+    INSERT INTO CONDITIONS (ChildSIN, ConditionName, ConditionTreatment)
+    VALUES (chldSIN, cndtnName, cndtnTrtmnt);
+END;
+
+
+/* Table: CHILD
  * Method: GetMedicalCondition()
  * Description: Gets all the conditions and treatments a child may have
  * @param ChildSin - SIN of Child
