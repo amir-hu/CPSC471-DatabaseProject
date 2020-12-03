@@ -186,6 +186,28 @@ BEGIN
 END;
 
 
+/*
+ * Table: PARENT_GUARDIAN
+ * Description: View outstanding payment due.
+ * @param prntSIN - The SIN of parent
+ */
+DROP PROCEDURE IF EXISTS ViewBill;
+CREATE PROCEDURE ViewBill (
+      IN prntSIN VARCHAR(8)
+    )
+
+BEGIN
+    SELECT
+        prnt.SIN
+      , bill.AmountPending
+    FROM PARENT_GUARDIAN as prnt
+    INNER JOIN
+         BILL as bill
+         ON bill.BillId = prnt.BillId
+    WHERE prnt.SIN = prntSIN;
+END;
+
+
 /* Table: PARENT_GUARDIAN
  * Method: PayBill()
  * Description: Parent pays outstanding bill
