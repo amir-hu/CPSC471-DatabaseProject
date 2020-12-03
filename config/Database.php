@@ -11,7 +11,7 @@ class Database {
     protected $servername = 'localhost';
     protected $username = 'root';
     protected $password = 'root';
-    private $database;
+    protected $database = ''; // Database name comes from database.sql script
     private $connection;
 
     // REFRENCE: https://www.php.net/manual/en/features.http-auth.php#73386
@@ -49,7 +49,7 @@ class Database {
         }
     }
 
-    public function connect() {
+    protected function setDatabaseName() {
 
         // Navigate to the current directory and open sql script. (C:\AppServ\www\CPSC471-DatabaseProject\config)
         // Get the database name from the sql script.
@@ -61,6 +61,11 @@ class Database {
         $pieces = explode(' ', $string);
         $this->database = array_pop($pieces);
         $this->database = substr($this->database, 0, -1); // Takes everything but the last char. Remove ; from the string.
+    }
+
+    public function connect() {
+
+        $this->setDatabaseName();
 
         $this->connection = null;
 
@@ -90,4 +95,3 @@ class Database {
 //$a->connect();
 
 ?>
-

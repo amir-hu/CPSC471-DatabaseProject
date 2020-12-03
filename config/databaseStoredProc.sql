@@ -1,4 +1,4 @@
-USE ChildDaycare;
+
 
 -- This is just an example. This will be called in the 'read.php' file.
 
