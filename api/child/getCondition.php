@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") {
 $data = json_decode(file_get_contents("php://input"));
 
 // Check if any paramters were passed and return that else return an empty string.
-$childSIN = !empty($data->childSIN) ? $data->childSIN : '';
+$childSIN = !empty($data->ChildSIN) ? $data->ChildSIN : '';
 $limit = isset($_GET['limit']) ? $_GET['limit'] : '10';
 // Instantiate DB and connect
 $database = new Database();
