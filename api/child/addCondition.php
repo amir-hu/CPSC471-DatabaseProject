@@ -3,13 +3,13 @@
 // Required HTTP headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: GET");
+header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 include_once '../../config/Database.php'; // Bring in database
 
-if ($_SERVER["REQUEST_METHOD"] != "GET") {
+if ($_SERVER["REQUEST_METHOD"] != "POST") {
     // Set response code - 405 Method not allowed
     http_response_code(405);
     $message = array('Message' => 'Request method ' . $_SERVER["REQUEST_METHOD"] . ' not allowed.');
