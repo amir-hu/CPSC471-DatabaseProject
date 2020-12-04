@@ -21,8 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] != "GET") {
 $data = json_decode(file_get_contents("php://input"));
 
 // Check if any paramters were passed and return that else return an empty string.
-$childSIN = !empty($data->ChildSIN) ? $data->ChildSIN : '';
-
+$childSIN = !empty($data->childSIN) ? $data->childSIN : '';
+$limit = isset($_GET['limit']) ? $_GET['limit'] : '10';
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
@@ -36,6 +36,7 @@ $stmt = $db->prepare($sql);
 
 // Clean up and sanitize data: remove html characters and strip any tags
 $childSIN = htmlspecialchars(strip_tags($childSIN));
+$limit = htmlspecialchars(strip_tags($limit));
 
 // Bind data
 $stmt->bindParam(':childSIN', $childSIN);
@@ -52,7 +53,7 @@ if (empty($childSIN)) {
     echo json_encode($message);
 
 // Check data type
-}else if (!(is_numeric($childSIN))) {
+}else if (!(is_numeric($childSIN)) || !(is_numeric($limit))) {
 
     // Set response code - 400 bad request
     http_response_code(400);
@@ -81,17 +82,28 @@ if (empty($childSIN)) {
             $message = array('Message' => 'No child with that SIN.');
             echo json_encode($message);
         }
-        else {
+        else if ($numOfRecords >= $limit) {
             // Set response code - 200 ok
-            http_response_code(200);
-
+            
+            for ($x = 0; $x < $limit; $x++) {
+                // Returns all rows as an object
+                $conditionRows = $stmt->fetch(PDO::FETCH_OBJ);
+                
+                // Turn to JSON & output
+                echo json_encode($conditionRows);                
+            }
+        }
+        
+        else 
+        {
             // Returns all rows as an object
             $conditionRows = $stmt->fetchAll(PDO::FETCH_OBJ);
-
+            
             // Turn to JSON & output
             echo json_encode($conditionRows);
         }
-
+        
+        http_response_code(200);
         $stmt->closeCursor();
     }
     catch(PDOException $exception) {

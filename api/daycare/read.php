@@ -43,7 +43,7 @@ include_once '../../config/Database.php'; // Bring in database
 // Check if any paramters were passed and return that.
 $daycareName = isset($_GET['DaycareName']) ? $_GET['DaycareName'] : die(); //why tho
 $daycareAddress = isset($_GET['DaycareAddress']) ? $_GET['DaycareAddress'] : die();
-
+$limit = isset($_GET['limit']) ? $_GET['limit'] : '10';
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
@@ -52,6 +52,7 @@ $database->authenticate("high");
 // SQL statement to call the stored proc
 // Positional paramaters. Act as placeholders.
 $sql = 'CALL SelectDaycare(:daycareName,:daycareAddress)';
+$limit = htmlspecialchars(strip_tags($limit));
 
 // Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
@@ -63,11 +64,40 @@ $stmt->bindParam(':daycareAddress', $daycareAddress);
 // Execute stored procedure
 $stmt->execute();
 
-// Returns all rows as an object
-$daycareRows = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-// Turn to JSON & output
-echo json_encode($daycareRows);
+$stmt->execute();
+
+// Set response code - 200 OK
+http_response_code(200);
+
+// Returns all rows as an object
+$numOfRecords = $stmt->rowCount();
+
+if ($numOfRecords == 0) {
+    $message = array('Message' => 'No reports available.');
+    echo json_encode($message);
+}
+else if ($numOfRecords >= $limit) {
+    // Set response code - 200 ok
+    
+    for ($x = 0; $x < $limit; $x++) {
+        // Returns all rows as an object
+        $conditionRows = $stmt->fetch(PDO::FETCH_OBJ);
+        
+        // Turn to JSON & output
+        echo json_encode($conditionRows);                
+    }
+}
+
+else 
+{
+    // Returns all rows as an object
+    $conditionRows = $stmt->fetchAll(PDO::FETCH_OBJ);
+    
+    // Turn to JSON & output
+    echo json_encode($conditionRows);
+}
+
 
 $stmt->closeCursor();
 

@@ -23,6 +23,7 @@ $data = json_decode(file_get_contents("php://input"));
 $crtkrId = !empty($data->CaretakerEmployeeId) ? $data->CaretakerEmployeeId : '';
 $chldSIN = !empty($data->ChildSIN) ? $data->ChildSIN : '';
 $rptdate = !empty($data->ReportDate) ? $data->ReportDate : '';
+$limit = isset($_GET['limit']) ? $_GET['limit'] : '10';
 
 // Instantiate DB and connect
 $database = new Database();
@@ -39,6 +40,7 @@ $stmt = $db->prepare($sql);
 $crtkrId = htmlspecialchars(strip_tags($crtkrId));
 $chldSIN = htmlspecialchars(strip_tags($chldSIN));
 $rptdate = htmlspecialchars(strip_tags($rptdate));
+$limit = htmlspecialchars(strip_tags($limit));
 
 // Bind data
 $stmt->bindParam(':crtkrId', $crtkrId);
@@ -57,7 +59,7 @@ if ( empty($crtkrId) || empty($chldSIN)|| empty($rptdate)) {
     echo json_encode($message);
 
 // Check data type
-}else if ( !(is_numeric($crtkrId)) || !(is_string($chldSIN)) || !(is_string($rptdate))) {
+}else if ( !(is_numeric($crtkrId)) || !(is_string($chldSIN)) || !(is_string($rptdate)) || !(is_numeric($limit))) {
 
     // Set response code - 400 bad request
     http_response_code(400);
@@ -86,17 +88,32 @@ if ( empty($crtkrId) || empty($chldSIN)|| empty($rptdate)) {
 
         // Returns all rows as an object
         $numOfRecords = $stmt->rowCount();
-        $numOfRecords = $stmt->rowCount();
+        
         if ($numOfRecords == 0) {
-            $message = array('Message' => "No reports for the specified parameters.");
+            $message = array('Message' => 'No reports available.');
             echo json_encode($message);
         }
-        else {
-            $reportRows = $stmt->fetchAll(PDO::FETCH_OBJ);
-            // Turn to JSON & output
-            echo json_encode($reportRows);
+        else if ($numOfRecords >= $limit) {
+            // Set response code - 200 ok
+            
+            for ($x = 0; $x < $limit; $x++) {
+                // Returns all rows as an object
+                $conditionRows = $stmt->fetch(PDO::FETCH_OBJ);
+                
+                // Turn to JSON & output
+                echo json_encode($conditionRows);                
+            }
         }
-
+        
+        else 
+        {
+            // Returns all rows as an object
+            $conditionRows = $stmt->fetchAll(PDO::FETCH_OBJ);
+            
+            // Turn to JSON & output
+            echo json_encode($conditionRows);
+        }
+        
         $stmt->closeCursor();
 
     }
