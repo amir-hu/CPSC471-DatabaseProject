@@ -31,6 +31,8 @@ $chldSIN = !empty($data->ChildSIN) ? $data->ChildSIN : '';
 $rptID = !empty($data->ReportId) ? $data->ReportId : '';
 $empId = !empty($data->EmployeeId) ? $data->EmployeeId : '';
 $rptDte = !empty($data->ReportDate) ? $data->ReportDate : '';
+$startTime = !empty($data->ScheduleStartTime) ? $data->ScheduleStartTime : '';
+$endTime = !empty($data->ScheduleEndTime) ? $data->ScheduleEndTime : '';
 $rptCmmnt = !empty($data->ReportComment) ? $data->ReportComment : NULL;
 $lessonsLearned = !empty($data->LessonsLearned) ? $data->LessonsLearned : NULL;
 $actionRequired = !empty($data->ActionRequired) ? $data->ActionRequired : NULL;
@@ -41,7 +43,7 @@ $db = $database->connect();
 $database->authenticate("med");
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
-$sql = 'CALL AddReport(:chldSIN, :rptID, :empId, :rptDte, :rptCmmnt, :lessonsLearned, :actionRequired)';
+$sql = 'CALL AddReport(:chldSIN, :rptID, :empId, :rptDte, :startTime, :endTime, :rptCmmnt, :lessonsLearned, :actionRequired)';
 
 // Prepare for execution of stored procedure
 $stmt = $db->prepare($sql);
@@ -51,6 +53,8 @@ $chldSIN = htmlspecialchars(strip_tags($chldSIN));
 $rptID = htmlspecialchars(strip_tags($rptID));
 $empId = htmlspecialchars(strip_tags($empId));
 $rptDte = htmlspecialchars(strip_tags($rptDte));
+$startTime = htmlspecialchars(strip_tags($startTime));
+$endTime = htmlspecialchars(strip_tags($endTime));
 $rptCmmnt = !is_null($rptCmmnt) ? htmlspecialchars(strip_tags($rptCmmnt)) : NULL;
 $lessonsLearned = !is_null($lessonsLearned) ? htmlspecialchars(strip_tags($lessonsLearned)) : NULL;
 $actionRequired = !is_null($actionRequired) ? htmlspecialchars(strip_tags($actionRequired)) : NULL;
@@ -60,6 +64,8 @@ $stmt->bindParam(':chldSIN', $chldSIN);
 $stmt->bindParam(':rptID', $rptID);
 $stmt->bindParam(':empId', $empId);
 $stmt->bindParam(':rptDte', $rptDte);
+$stmt->bindParam(':startTime', $startTime);
+$stmt->bindParam(':endTime', $endTime);
 $stmt->bindParam(':rptCmmnt', $rptCmmnt);
 $stmt->bindParam(':lessonsLearned', $lessonsLearned);
 $stmt->bindParam(':actionRequired', $actionRequired);
@@ -67,7 +73,7 @@ $stmt->bindParam(':actionRequired', $actionRequired);
 // Validate request:
 
 // Check if the data is empty
-if (empty($chldSIN) || empty($rptID) || empty($empId) || empty($rptDte)) {
+if (empty($chldSIN) || empty($rptID) || empty($empId) || empty($rptDte) || empty($startTime) || empty($endTime)) {
 
     // Set response code - 400 bad request
     http_response_code(400);
@@ -76,7 +82,7 @@ if (empty($chldSIN) || empty($rptID) || empty($empId) || empty($rptDte)) {
     echo json_encode($message);
 
     // Check data type
-}else if ( !(is_numeric($chldSIN) & is_numeric($rptID) & is_numeric($empId) & is_string($rptDte)) ) {
+}else if ( !(is_numeric($chldSIN) & is_numeric($rptID) & is_numeric($empId) & is_string($rptDte) & strtotime($startTime) != False & strtotime($endTime) != False) ) {
 
     // Set response code - 400 bad request
     http_response_code(400);

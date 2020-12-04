@@ -162,6 +162,8 @@ CREATE TABLE DAILY_REPORT (
     REPORTID INT NOT NULL,	
     CARETAKEREMPLOYEEID INT NOT NULL,	
     REPORTDATE DATE NOT NULL,
+    SCHEDULESTARTTIME TIME NOT NULL,
+    SCHEDULEENDTIME TIME NOT NULL,
     REPORTCOMMENT VARCHAR(1000),
     INDEX (CHILDSIN), INDEX (CARETAKEREMPLOYEEID), INDEX (REPORTID),
     PRIMARY KEY (CHILDSIN, REPORTDATE, REPORTID, CARETAKEREMPLOYEEID),
@@ -233,9 +235,9 @@ INSERT INTO CHILD (SIN, CaretakerEmployeeId, ParentSIN, DateOfBirth, DaycareName
 
 INSERT INTO CONDITIONS VALUES ('11111111', 'Celiac Disease', 'Gluten Free Diet'), ('11111111', 'Asthma', 'Inhaler'), ('55566777', 'Asthma', 'Inhaler'), ('55566777', 'OCD', 'Monitor Actions');
 
-INSERT INTO DAILY_REPORT (ChildSIN, ReportId, CaretakerEmployeeId, ReportDate, ReportComment)
-VALUES ('11111111', 1, 5555, '2020-01-01', 'Good job child'),
-       ('55566777', 2, 5550, '2020-01-01', 'Bad child');
+INSERT INTO DAILY_REPORT (ChildSIN, ReportId, CaretakerEmployeeId, ReportDate, ScheduleStartTime, ScheduleEndTime, ReportComment)
+VALUES ('11111111', 1, 5555, '2020-01-01', '10:00:00', '13:00:00', 'Child took medication at 2pm. All day child did a good job!'),
+       ('55566777', 2, 5550, '2020-01-01', '09:00:00', '16:41:00', 'Child took 20 min breaks as directed. Child was a bad child.');
 
 INSERT INTO INCIDENTS (ReportId, ActionRequired)
 VALUES (1, NULL),

@@ -105,6 +105,8 @@ BEGIN
        , dlyRprt.ReportId
        , dlyRprt.CaretakerEmployeeId
        , dlyRprt.ReportDate
+       , dlyRprt.ScheduleStartTime
+       , dlyRprt.ScheduleEndTime
        , dlyRprt.ReportComment
        , actvts.LessonsLearned
        , incdnts.ActionRequired
@@ -519,8 +521,8 @@ END;
  * @param rptId - Id of the report
  * @param empId - EmployeeID of the caretaker inserting the report
  * @param rptDte - Date of the report
- * @param strtTme - Start time of the report
- * @param endtme - End time of the report
+ * @param strtTme - Start time of the schedule
+ * @param endtme - End time of the schedule
  * @param rptCmmnt - Text of report
  * @param lsnLrnd - Lessons learned for the day
  * @param actnRqrd - Any action requried from the child
@@ -531,14 +533,16 @@ CREATE PROCEDURE AddReport(
     , IN rptID INT
     , IN empId INT  
     , IN rptDte DATE
+    , IN strtTme TIME
+    , IN endTme TIME
     , IN rptCmmnt VARCHAR(1000)
     , IN lsnLrnd VARCHAR(100)
     , IN actnRqrd VARCHAR(100)
     )
 
 BEGIN 
-    INSERT INTO DAILY_REPORT (ChildSIN, ReportId, CaretakerEmployeeId, ReportDate, ReportComment)
-    VALUES (chldSIN, rptId, empId, rptDte, rptCmmnt);
+    INSERT INTO DAILY_REPORT (ChildSIN, ReportId, CaretakerEmployeeId, ReportDate, ScheduleStartTime, ScheduleEndTime, ReportComment)
+    VALUES (chldSIN, rptId, empId, rptDte, strtTme, endTme, rptCmmnt);
 
     INSERT INTO ACTIVITIES (ReportId, LessonsLearned)
     VALUES (rptID, lsnLrnd);
@@ -564,6 +568,8 @@ CREATE PROCEDURE CaretakerGetDailyReport(
 BEGIN 
     SELECT
          dlyRprt.ChildSIN
+       , dlyRprt.ScheduleStartTime
+       , dlyRprt.ScheduleEndTime
        , dlyRprt.ReportComment
        , actvts.LessonsLearned
        , incdnts.ActionRequired
