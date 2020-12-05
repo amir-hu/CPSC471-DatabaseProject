@@ -85,7 +85,7 @@ if (empty($empId)) {
         $numOfRecords = $stmt->rowCount();
         
         if ($numOfRecords == 0 || $limit <= 0) {
-            $message = array('Message' => 'No daycare available for that employee id.');
+            $message = array('Message' => 'No daycare.');
             echo json_encode($message);
         }
         else if ($numOfRecords >= $limit) {

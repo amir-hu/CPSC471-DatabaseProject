@@ -83,7 +83,7 @@ if (empty($prntSIN)) {
         $numOfRecords = $stmt->rowCount();
         
         if ($numOfRecords == 0 || $limit <= 0) {
-            $message = array('Message' => 'No children with that parent SIN.');
+            $message = array('Message' => 'No children.');
             echo json_encode($message);
         }
 

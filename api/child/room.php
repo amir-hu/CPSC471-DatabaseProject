@@ -85,7 +85,7 @@ if (empty($childSIN)) {
         $numOfRecords = $stmt->rowCount();
         
         if ($numOfRecords == 0 || $limit <= 0) {
-            $message = array('Message' => 'No room assigned.');
+            $message = array('Message' => 'No rooms.');
             echo json_encode($message);
         }
         else if ($numOfRecords >= $limit) {

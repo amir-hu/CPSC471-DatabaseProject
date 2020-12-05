@@ -87,7 +87,7 @@ if (empty($daycareName) || empty($daycareAddress) ) {
         $numOfRecords = $stmt->rowCount();
         
         if ($numOfRecords == 0 || $limit <= 0) {
-            $message = array('Message' => 'No daycare with that name and address.');
+            $message = array('Message' => 'No employees.');
             echo json_encode($message);
         }
         else if ($numOfRecords >= $limit) {
