@@ -124,7 +124,9 @@ BEGIN
         PERSON as prsn
         ON prsn.SIN = chld.SIN
     WHERE chld.SIN = childSIN
-    ORDER BY dlyRprt.ScheduleStartTime DESC;
+    ORDER BY
+        dlyRprt.ReportDate DESC
+      , dlyRprt.ScheduleStartTime DESC;
 END;
 
 
@@ -569,6 +571,7 @@ CREATE PROCEDURE CaretakerGetDailyReport(
 BEGIN 
     SELECT
          dlyRprt.ChildSIN
+       , dlyRprt.ReportDate
        , dlyRprt.ScheduleStartTime
        , dlyRprt.ScheduleEndTime
        , dlyRprt.ReportComment
@@ -581,10 +584,12 @@ BEGIN
     INNER JOIN
          INCIDENTS as incdnts
          ON incdnts.ReportId = dlyRprt.ReportId
-    WHERE ChildSIN = chldSIN
-        AND CaretakerEmployeeId = crtkrId
-        AND ReportDate = rptdate
-    ORDER BY dlyRprt.ScheduleStartTime DESC;
+    WHERE dlyRprt.ChildSIN = chldSIN
+        AND dlyRprt.CaretakerEmployeeId = crtkrId
+        AND dlyRprt.ReportDate = rptdate
+    ORDER BY
+        dlyRprt.ReportDate DESC
+      , dlyRprt.ScheduleStartTime DESC;
 END;
 
 
