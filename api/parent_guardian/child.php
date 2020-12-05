@@ -22,7 +22,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 // Check if any paramters were passed and return that else return an empty string.
 $prntSIN = !empty($data->ParentSIN) ? $data->ParentSIN : '';
-$limit = isset($_GET['limit']) ? $_GET['limit'] : '10';
+$limit = isset($_GET['limit']) ? $_GET['limit'] : '100';
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
@@ -82,7 +82,7 @@ if (empty($prntSIN)) {
         // Returns all rows as an object
         $numOfRecords = $stmt->rowCount();
         
-        if ($numOfRecords == 0) {
+        if ($numOfRecords == 0 || $limit <= 0) {
             $message = array('Message' => 'No children with that parent SIN.');
             echo json_encode($message);
         }

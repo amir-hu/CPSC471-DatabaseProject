@@ -123,7 +123,8 @@ BEGIN
     INNER JOIN
         PERSON as prsn
         ON prsn.SIN = chld.SIN
-    WHERE chld.SIN = childSIN;
+    WHERE chld.SIN = childSIN
+    ORDER BY dlyRprt.ScheduleStartTime DESC;
 END;
 
 
@@ -582,7 +583,8 @@ BEGIN
          ON incdnts.ReportId = dlyRprt.ReportId
     WHERE ChildSIN = chldSIN
         AND CaretakerEmployeeId = crtkrId
-        AND ReportDate = rptdate;
+        AND ReportDate = rptdate
+    ORDER BY dlyRprt.ScheduleStartTime DESC;
 END;
 
 

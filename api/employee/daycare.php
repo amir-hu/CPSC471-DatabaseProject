@@ -22,7 +22,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 // Check if any paramters were passed and return that else return an empty string.
 $empId = !empty($data->EmployeeId) ? $data->EmployeeId : '';
-$limit = isset($_GET['limit']) ? $_GET['limit'] : '10';
+$limit = isset($_GET['limit']) ? $_GET['limit'] : '100';
 
 // Instantiate DB and connect
 $database = new Database();
@@ -84,8 +84,8 @@ if (empty($empId)) {
         // Returns all rows as an object
         $numOfRecords = $stmt->rowCount();
         
-        if ($numOfRecords == 0) {
-            $message = array('Message' => 'No daycare with that employee id.');
+        if ($numOfRecords == 0 || $limit <= 0) {
+            $message = array('Message' => 'No daycare available for that employee id.');
             echo json_encode($message);
         }
         else if ($numOfRecords >= $limit) {
