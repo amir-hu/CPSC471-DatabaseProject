@@ -27,7 +27,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 // Check if any paramters were passed and return that else return an empty string.
 $parentSIN = !empty($data->ParentSIN) ? $data->ParentSIN : '';
-$limit = isset($_GET['limit']) ? $_GET['limit'] : '10';
+$limit = isset($_GET['limit']) ? $_GET['limit'] : '100';
 
 // SQL statement to call the stored proc. Positional paramaters - act as placeholders.
 $sql = 'CALL ViewBill(:parentSIN)';
@@ -83,7 +83,7 @@ if (empty($parentSIN)) {
         // Returns all rows as an object
         $numOfRecords = $stmt->rowCount();
         
-        if ($numOfRecords == 0) {
+        if ($numOfRecords == 0 || $limit <= 0) {
             $message = array('Message' => 'No bill for this parent.');
             echo json_encode($message);
         }

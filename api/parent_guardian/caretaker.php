@@ -23,7 +23,7 @@ $data = json_decode(file_get_contents("php://input"));
 // Check if any paramters were passed and return that else return an empty string.
 $daycareName = !empty($data->DaycareName) ? $data->DaycareName : '';
 $daycareAddress = !empty($data->DaycareAddress) ? $data->DaycareAddress : '';
-$limit = isset($_GET['limit']) ? $_GET['limit'] : '10';
+$limit = isset($_GET['limit']) ? $_GET['limit'] : '100';
 
 // Instantiate DB and connect
 $database = new Database();
@@ -88,7 +88,7 @@ if (empty($daycareName) || empty($daycareAddress) ) {
         // Returns all rows as an object
         $numOfRecords = $stmt->rowCount();
         
-        if ($numOfRecords == 0) {
+        if ($numOfRecords == 0 || $limit <= 0) {
             $message = array('Message' => 'No caretakers.');
             echo json_encode($message);
         }

@@ -4,6 +4,8 @@ CREATE DATABASE ChildDaycare;
 
 USE ChildDaycare;
 
+-- Set up the tables 
+
 DROP TABLE IF EXISTS DAYCARE;
 CREATE TABLE DAYCARE (
      DAYCARENAME VARCHAR(100) NOT NULL
@@ -189,8 +191,7 @@ CREATE TABLE ACTIVITIES (
     FOREIGN KEY (REPORTID) REFERENCES DAILY_REPORT (REPORTID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-
-
+-- Insert data for testing
 
 INSERT INTO PERSON (SIN, FirstName, LastName, Gender, AddrUnitNum, AddrStreet, AddrCity, AddrPostalCode, StartDay, StartMonth, StartYear)
 VALUES 
@@ -215,7 +216,7 @@ VALUES ('Daycare One', 'Daycare Street NW', '12345678', 5555, '8.0', 25.00),
 
 INSERT INTO CARETAKER (SIN, EmployeeId, PastIncidents, Availability)
 VALUES ('12345678', 5555, 'Slept during shift once.', TRUE),
-      ('44433222', 5550, NULL, TRUE);
+       ('44433222', 5550, NULL, TRUE);
 
 INSERT INTO ADMIN VALUES ('99988877', 1234);
 
@@ -237,12 +238,27 @@ INSERT INTO CONDITIONS VALUES ('11111111', 'Celiac Disease', 'Gluten Free Diet')
 
 INSERT INTO DAILY_REPORT (ChildSIN, ReportId, CaretakerEmployeeId, ReportDate, ScheduleStartTime, ScheduleEndTime, ReportComment)
 VALUES ('11111111', 1, 5555, '2020-01-01', '10:00:00', '13:00:00', 'Child took medication at 2pm. All day child did a good job!'),
-       ('55566777', 2, 5550, '2020-01-01', '09:00:00', '16:41:00', 'Child took 20 min breaks as directed. Child was a bad child.');
+       ('55566777', 2, 5550, '2020-01-01', '09:00:00', '16:41:00', 'Child took 20 min breaks as directed. Child was a bad child.'),
+       ('11111111', 3, 5555, '2020-07-01', '09:00:00', '12:00:00', 'Child played well'),
+       ('55566777', 4, 5550, '2020-07-01', '12:00:00', '16:41:00', 'Child was a bad child.'),
+       ('55566777', 5, 5550, '2020-07-01', '15:00:00', '20:00:00', 'Child calmed down after.'),
+       ('11111111', 6, 5555, '2020-07-01', '12:12:00', '12:45:00', 'Child took a lunch break'),
+       ('11111111', 7, 5555, '2020-07-01', '12:45:00', '20:00:00', 'Childs parent was late to pick him up.');
 
 INSERT INTO INCIDENTS (ReportId, ActionRequired)
 VALUES (1, NULL),
-       (2, 'Needs to be talked to about behaviour');
+       (2, 'Needs to be talked to about behaviour'),
+       (3, NULL),
+       (4, 'This is a bad kiddo'),
+       (5, 'Talked to child about his behaviour'),
+       (6, NULL),
+       (7, 'Child was upset that his parent was late');
 
 INSERT INTO ACTIVITIES (ReportId, LessonsLearned)
 VALUES (1, 'Learned about space and aliens'),
-       (2, 'Learned about dinosaurs');
+       (2, 'Learned about dinosaurs'),
+       (3, 'Studied computers'),
+       (4, 'Could not focus on his education'),
+       (5, NULL),
+       (6, 'Child can cook!'),
+       (7, NULL);

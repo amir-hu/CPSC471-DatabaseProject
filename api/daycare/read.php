@@ -43,7 +43,8 @@ include_once '../../config/Database.php'; // Bring in database
 // Check if any paramters were passed and return that.
 $daycareName = isset($_GET['DaycareName']) ? $_GET['DaycareName'] : die(); //why tho
 $daycareAddress = isset($_GET['DaycareAddress']) ? $_GET['DaycareAddress'] : die();
-$limit = isset($_GET['limit']) ? $_GET['limit'] : '10';
+$limit = isset($_GET['limit']) ? $_GET['limit'] : '100';
+
 // Instantiate DB and connect
 $database = new Database();
 $db = $database->connect();
@@ -73,7 +74,7 @@ http_response_code(200);
 // Returns all rows as an object
 $numOfRecords = $stmt->rowCount();
 
-if ($numOfRecords == 0) {
+if ($numOfRecords == 0 || $limit <= 0) {
     $message = array('Message' => 'No reports available.');
     echo json_encode($message);
 }
