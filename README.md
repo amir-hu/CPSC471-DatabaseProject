@@ -26,3 +26,16 @@ CPSC 471 project for the Data Base Management Systems course at the University o
     1. Open [Database.php](config/Database.php) to change ``servername``, ``username``, or ``password``
     1. To change the database name, open [database.sql](config/database.sql) and change ``childDaycare`` in lines 1, 3 and 5
     1. Once those changes are made, navigate to http://localhost/CPSC471-DatabaseProject/config/Install.php
+    
+## Overview
+* This API was designed for a real-life problem for which a database application was appropriate
+* This was created using PHP and MySQL database system
+* For a list of available endpoints, their methods, parameters, and other details, view the [API documentation](https://documenter.getpostman.com/view/13545898/TVmLDe7R)
+
+## API Authentication
+* The API endpoints are protected with ``basic auth``
+* Each endpoint requires a valid username and password to make the request
+* The valid accounts are:
+    * Username: ``high``, Password: ``high``, Clearance Level: ``high``
+    * Username: ``med``, Password: ``med``, Clearance Level: ``medium``
+    * Username: ``low``, Password: ``low``, Clearance Level: ``low``
