@@ -18,7 +18,7 @@ class Database {
     public function authenticate($clearance) {
 
         // Accounts that would work with the endpoints. Not all have the same clearance level.
-        $validAccounts = array ("A" => array("Hakuna","low"), "Metroid" => array("Prime","med"), "Erin" => array("Matata","high"));
+        $validAccounts = array ("low" => array("low","low"), "med" => array("med","med"), "high" => array("high","high"));
         $valid_users = array_keys($validAccounts);
 
         $user = $_SERVER['PHP_AUTH_USER']; // Username that you pass in.
