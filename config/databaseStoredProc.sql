@@ -1,48 +1,8 @@
 
-
--- This is just an example. This will be called in the 'read.php' file.
-
-/*
- * Table: DAYCARE
- * Description: Selects all attributes from the table.
- * Input: the name of the daycare.
- */
-DROP PROCEDURE IF EXISTS SelectDaycare;
-CREATE PROCEDURE SelectDaycare (
-      IN name VARCHAR(100)
-    , IN address VARCHAR(100)
-    )
-
-BEGIN
-    SELECT
-         DaycareName
-       , DaycareAddress
-       , TotalNumOfCaretakers
-    FROM DAYCARE
-    WHERE DaycareName = name;
-END;
-
-/*
- * Table: DAYCARE
- * Description: Create a daycare
- */
-DROP PROCEDURE IF EXISTS CreateDaycare;
-CREATE PROCEDURE CreateDaycare (
-      IN name VARCHAR(100)
-    , IN address VARCHAR(100)
-    , IN caretakers INT
-    )
-
-BEGIN
-    INSERT INTO DAYCARE (DaycareName, DaycareAddress, TotalNumOfCaretakers)
-    VALUES (name,address,caretakers);
-END;
-
-
 /* Table: CHILD
  * Method: AddMedicalCondition()
  * Description: Gets all the conditions and treatments a child may have
- * @param ChildSin - SIN of Child
+ * @param chldSIN - SIN of Child
  * @param cndtnName - The name of the medical condition
  * @param cndtnTrtmnt - What is used to treat the condition
  */
@@ -62,7 +22,7 @@ END;
 /* Table: CHILD
  * Method: GetMedicalCondition()
  * Description: Gets all the conditions and treatments a child may have
- * @param ChildSin - SIN of Child
+ * @param childSIN - SIN of Child
  */
 DROP PROCEDURE IF EXISTS GetMedicalCondition;
 CREATE PROCEDURE GetMedicalCondition (
@@ -90,7 +50,7 @@ END;
 /* Table: CHILD
  * Method: ChildGetDailyReport()
  * Description: Gets all daily reports for the child ordered by date (desc)
- * @param ChildSIN - Child SIN
+ * @param childSIN - Child SIN
  */
 DROP PROCEDURE IF EXISTS ChildGetDailyReport;
 CREATE PROCEDURE ChildGetDailyReport (
@@ -125,15 +85,15 @@ BEGIN
         ON prsn.SIN = chld.SIN
     WHERE chld.SIN = childSIN
     ORDER BY
-        dlyRprt.ReportDate DESC
-      , dlyRprt.ScheduleStartTime DESC;
+         dlyRprt.ReportDate DESC
+       , dlyRprt.ScheduleStartTime DESC;
 END;
 
 
 /* Table: CHILD
  * Method: ChildGetRoom()
  * Description: Get the room for the child
- * @param ChildSIN - SIN of Child
+ * @param childSIN - SIN of Child
  */
 DROP PROCEDURE IF EXISTS ChildGetRoom;
 CREATE PROCEDURE ChildGetRoom (
@@ -150,8 +110,8 @@ BEGIN
     INNER JOIN
          ROOM as rm
          ON rm.DaycareName = chld.DaycareName
-            AND rm.DaycareAddress = chld.DaycareAddress
-            AND chld.RoomId = rm.RoomId
+             AND rm.DaycareAddress = chld.DaycareAddress
+             AND chld.RoomId = rm.RoomId
     WHERE chld.SIN = childSIN;
 END;
 
@@ -199,7 +159,7 @@ END;
 /* Table: PARENT_GUARDIAN
  * Method: GetChild()
  * Description: Returns child(ren) of parents
- * @param ParentSIN 
+ * @param prntSIN 
  */
 DROP PROCEDURE IF EXISTS GetChild;
 CREATE PROCEDURE GetChild(
@@ -220,8 +180,8 @@ BEGIN
 END;
 
 
-/*
- * Table: PARENT_GUARDIAN
+/* Table: PARENT_GUARDIAN
+ * Method: ViewBill()
  * Description: View outstanding payment due.
  * @param prntSIN - The SIN of parent
  */
@@ -232,8 +192,8 @@ CREATE PROCEDURE ViewBill (
 
 BEGIN
     SELECT
-        prnt.SIN
-      , bill.AmountPending
+         prnt.SIN
+       , bill.AmountPending
     FROM PARENT_GUARDIAN as prnt
     INNER JOIN
          BILL as bill
@@ -246,8 +206,8 @@ END;
  * Method: PayBill()
  * Description: Parent pays outstanding bill
  * @param id - id of the bill to be paid
- * @param PaymentMethod - payment method of parent_guardian
- * @param amountPending - the amount left over after payment
+ * @param pmntMthd - payment method of parent_guardian
+ * @param amntPndg - the amount left over after payment
  */
 DROP PROCEDURE IF EXISTS PayBill;
 CREATE PROCEDURE PayBill(
@@ -267,8 +227,8 @@ END;
 /* Table: ADMIN
  * Method: AddToWaitlist()
  * Description: Add a new Child/family to the waitlist
- * @param chldnme - Name of child to be inserted
- * @param fmlyNme - Last name of child/family
+ * @param chldFrstNme - Name of child to be inserted
+ * @param chldLstNme - Last name of child/family
  * @param empId - ID of employee submitting
  */
 DROP PROCEDURE IF EXISTS AddToWaitlist;
@@ -367,8 +327,7 @@ CREATE PROCEDURE UpdateEmployeePay(
 
 BEGIN
     UPDATE EMPLOYEE
-    SET
-         WorkHours = wrkHrs
+    SET  WorkHours = wrkHrs
        , HourlyRate = hrlyRate
     WHERE SIN = empSIN;
 END;
@@ -377,7 +336,7 @@ END;
 /* Table: ADMIN
  * Method: RemoveEmployee()
  * Description: Remove an employee
- * @param EmployeeId - ID of employee to remove
+ * @param empId - ID of employee to remove
  */
 DROP PROCEDURE IF EXISTS RemoveEmployee;
 CREATE PROCEDURE RemoveEmployee(
@@ -568,6 +527,7 @@ CREATE PROCEDURE CaretakerGetDailyReport(
     , IN  chldSIN VARCHAR(8)
     , IN  rptdate DATE
     )
+
 BEGIN 
     SELECT
          dlyRprt.ChildSIN
@@ -588,8 +548,8 @@ BEGIN
         AND dlyRprt.CaretakerEmployeeId = crtkrId
         AND dlyRprt.ReportDate = rptdate
     ORDER BY
-        dlyRprt.ReportDate DESC
-      , dlyRprt.ScheduleStartTime DESC;
+         dlyRprt.ReportDate DESC
+       , dlyRprt.ScheduleStartTime DESC;
 END;
 
 
@@ -604,6 +564,7 @@ CREATE PROCEDURE AssignChild(
      IN chldSIN VARCHAR(8)
    , IN rmId INT
     )
+
 BEGIN
     UPDATE CHILD
     SET RoomId = rmId
