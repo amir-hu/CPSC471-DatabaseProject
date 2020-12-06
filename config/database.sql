@@ -19,7 +19,6 @@ CREATE TABLE ROOM (
     DAYCARENAME VARCHAR(100) NOT NULL,
     DAYCAREADDRESS VARCHAR(100) NOT NULL,
     ROOMID INT NOT NULL,
-    SIZE INT NOT NULL,
     SEATSAVAILABLE INT NOT NULL,
     PRIMARY KEY (DAYCARENAME, DAYCAREADDRESS, ROOMID),
     INDEX(DAYCARENAME, DAYCAREADDRESS), INDEX (ROOMID),
@@ -205,7 +204,10 @@ VALUES
 
 INSERT INTO DAYCARE VALUES ('Daycare One', 'Daycare Street NW', 5), ('Daycare Two', 'Other Daycare Street', 30);
 
-INSERT INTO ROOM VALUES ('Daycare One', 'Daycare Street NW', 1, 5, 4), ('Daycare Two', 'Other Daycare Street', 1, 10, 8), ('Daycare One', 'Daycare Street NW', 2, 3, 1);
+INSERT INTO ROOM (DaycareName, DaycareAddress, RoomId, SeatsAvailable)
+VALUES ('Daycare One', 'Daycare Street NW', 1, 4),
+       ('Daycare Two', 'Other Daycare Street', 1, 8),
+       ('Daycare One', 'Daycare Street NW', 2, 1);
 
 INSERT INTO PERSON_PHONE VALUES ('12345678', '4035551234'), ('12345678', '4035551223'), ('11122233', '4035556543'), ('11111112', '1123456789'), ('99988877','1233334444'), ('44433222', '4039999911');
 
