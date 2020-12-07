@@ -1,8 +1,10 @@
 ﻿├── api - Contains endpoints which execute stored procedures 
 │   ├── admin
+│   │   ├── addBill.php
 │   │   ├── addEmployee.php
-│   │   ├── bill.php
+│   │   ├── employeePayroll.php
 │   │   ├── removeEmployee.php
+│   │   ├── updateBill.php
 │   │   ├── waitlist.php
 │   ├── caretaker
 │   ├── child
