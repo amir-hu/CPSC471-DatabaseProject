@@ -6,6 +6,7 @@ CPSC 471 project for the Data Base Management Systems course at the University o
 * This API was designed for a real-life problem for which a database application was appropriate
 * This was created using PHP and a MySQL database system
 * For a list of available endpoints, their methods, parameters, and other details, view the [API documentation](https://documenter.getpostman.com/view/13545898/TVmLDe7R)
+* Refer to [FileStructure.txt](FileStructure.txt) for a quick overview of the project folder structure
 
 ## Download and Install
 * A web server
@@ -35,4 +36,4 @@ CPSC 471 project for the Data Base Management Systems course at the University o
 * This configuration can be changed to your own preference by following these steps:
     1. Open [Database.php](config/Database.php) to change ``servername``, ``username``, or ``password``
     1. To change the database name, open [database.sql](config/database.sql) and change ``childDaycare`` in lines 1, 3 and 5
-    1. Once those changes are made, navigate to http://localhost/CPSC471-DatabaseProject/config/Install.php
+* Once those changes are made, navigate to http://localhost/CPSC471-DatabaseProject/config/Install.php
