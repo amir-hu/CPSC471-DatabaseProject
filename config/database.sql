@@ -203,7 +203,8 @@ VALUES ('12345678', 'Erin', 'Employee', 'Female', 123, 'Calgary Drive', 'Calgary
        
 INSERT INTO DAYCARE (DaycareName, DaycareAddress, TotalNumOfCaretakers)
 VALUES ('Daycare One', 'Daycare Street NW', 5), 
-       ('Daycare Two', 'Other Daycare Street', 30);
+       ('Daycare Two', 'Other Daycare Street', 30),
+       ('Bean', '123 Hogwarts Ave', 1);
 
 INSERT INTO ROOM (DaycareName, DaycareAddress, RoomId, SeatsAvailable)
 VALUES ('Daycare One', 'Daycare Street NW', 1, 4),

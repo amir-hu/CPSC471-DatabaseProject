@@ -570,3 +570,14 @@ BEGIN
     SET RoomId = rmId
     WHERE SIN = chldSIN;
 END;
+/* Table: DAYCARE
+ * Method: GetDaycare()
+ * Description: Gets all Daycares
+ */
+DROP PROCEDURE IF EXISTS GetDaycare;
+CREATE PROCEDURE GetDaycare()
+
+BEGIN
+    SELECT DaycareName
+    FROM Daycare;
+END;
