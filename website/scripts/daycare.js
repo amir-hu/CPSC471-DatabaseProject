@@ -22,6 +22,21 @@ function myFunction() {
     document.getElementById("myDropdown").classList.toggle("show");
 }
 
+function toolbar() {
+    <div class="navbar">
+        <a href="#home">Home</a>
+        <div class="dropdown">
+            <button class="dropbtn">
+                Admin
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="#">Add Bill</a>
+            </div>
+        </div>
+    </div>
+}
+
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function (event) {
     if (!event.target.matches('.dropbtn')) {

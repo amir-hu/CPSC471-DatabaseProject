@@ -3,27 +3,23 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Hakuna Matata</title>
     <link rel="stylesheet" href="styles/style.css" />
-    <link rel="shortcut icon" href="#" /> 
+    <link rel="shortcut icon" href="#" />
 </head>
 <body>
-    <div class="topnav">
-        <a class="active" href="">Home</a>
-        <a href="available.html">Daycares Available</a>
-        <a href="about.html">About</a>
+    <div class="navbar">
+        <a class="active"href="#home">Home</a>
+        <div class="dropdown">
+            <button class="dropbtn">
+                Admin
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="admin/addBill.html">Add Bill</a>
+                <a href="">Add Employee</a>
+            </div>
+        </div>
     </div>
-</body>
-<body>
-
-    <h1> Daycare</h1>
-   <!-- <form action="">
-        <input type="text" name="DaycareName" title="name" />
-        <input type="text" name="DaycareAddress" />
-        <button type="submit">Submit</button>
-    </form>-->
-
-    
 </body>
 
 </html>
