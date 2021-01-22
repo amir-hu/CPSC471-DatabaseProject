@@ -285,6 +285,21 @@ BEGIN
 END;
  
 
+ /* Table: ADMIN
+ * Method: getBillIds()
+ * Description: Update child bill
+ * @param bill - Id of bill
+ * @param amount - new amount of bill
+ */
+DROP PROCEDURE IF EXISTS getBillIds;
+CREATE PROCEDURE getBillIds( )
+
+BEGIN 
+    SELECT BillId
+    FROM Bill
+    ORDER BY
+         BIllId DESC;
+END;
 /* Table: ADMIN
  * Method: AddEmployee()
  * Description: Add a new employee

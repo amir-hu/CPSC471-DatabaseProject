@@ -232,8 +232,8 @@ INSERT INTO ADMIN (SIN, EmployeeId)
 VALUES ('99988877', 1234);
 
 INSERT INTO BILL (BillId, CreatedById, PaymentMethod, AmountPending)
-VALUES (12345, 1234, 'MasterCard', 0.00), 
-       (43434, 1234, NULL, 30.00);
+VALUES (1, 1234, 'MasterCard', 0.00), 
+       (2, 1234, NULL, 30.00);
 
 INSERT INTO WAITLIST (ChildFirstName, ChildLastName, SubmittedById) 
 VALUES ('Possible New Child', 'Theior Family', 1234),
