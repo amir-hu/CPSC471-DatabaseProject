@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../website/styles/style.css" />
+    <link rel="shortcut icon" href="#" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="navbar">
+        <a href="../../website/index.html">Home</a>
+        <div class="dropdown">
+            <button class="dropbtn">
+                Admin
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a class="active" href="#">Add Bill</a>
+                <a href="">Add Employee</a>
+            </div>
+        </div>
+    </div>
+
+    <form method="POST" name="info" id="info">
+        <br />
+        <label for="billId" id="de">billId:</label>
+        <input type="text" id="billId" name="BillId" >
+            <input type="button" value="Create new ID" onclick="findIds()" /><br /><br />
+        <label for="empId ">empId :</label>
+        <input type="text" id="empId " name="CreatedById"><br><br>
+        <label for="pmntmthd">Payment Method</label>
+        <input type="text" id="pmntmthd" name="PaymentMethod"><br /><br />
+        <label for="amntpndng">Amount Pending</label>
+        <input type="text" id="amntpndng" name="AmountPending"><br /><br />
+        <input type="button" value="Submit" onclick="parseInfo()">
+    </form>
+    <p class="result"></p>
+
+
+    <script>
+
+        function parseInfo() {
+            let result = document.querySelector('.result');
+            let test = document.getElementById('de');
+            var formData = ($(info).serializeArray());
+            var jsonString = "{ "
+            for (var i = 0; i < 4; i++) {
+                jsonString = jsonString + "\"" + formData[i].name + "\":\"" + formData[i].value + "\" ";
+                var end = (i == 3) ? "}" : ",";
+                jsonString = jsonString + end;
+
+            }
+            //console.log(JSON.stringify(Array(formData[0].name, formData[0].value)));
+            console.log(JSON.parse(jsonString));
+            var xhr = new XMLHttpRequest();
+            var url = "../../api/admin/addbill.php";
+            xhr.open("POST", url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    result.innerHTML = JSON.parse(this.responseText).Message;
+                    test.value = "lets try dis";
+                    console.log(JSON.stringify(this.responseText));
+                } 
+            };
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(jsonString);
+            
+        }
+
+        function findIds() {
+            var xhr = new XMLHttpRequest();
+            var url = "../../api/admin/viewBill.php";
+            xhr.open("GET", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    var parts = this.responseText.split("~");
+                    var nId = parseInt(JSON.parse(parts[0]).BillId) + 1;
+                    console.log(nId);
+                    document.getElementById('billId').value = nId;
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</body>
+
+
+
+</html>

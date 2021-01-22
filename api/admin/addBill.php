@@ -20,6 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 // Get data in JSON format.
 $data = json_decode(file_get_contents("php://input"));
 
+
 // Check if any paramters were passed and return that else return an empty string.
 $billId = !empty($data->BillId) ? $data->BillId : '';
 $empId = !empty($data->CreatedById) ? $data->CreatedById : '';
@@ -55,7 +56,7 @@ $stmt->bindParam(':amtPending', $amtPending);
 if (empty($billId) || empty($empId) || empty($amtPending)) {
 
     // Set response code - 400 bad request
-    http_response_code(400);
+    http_response_code(401);
 
     $message = array('Message' => 'Unable to create bill. Data is incomplete.');
     echo json_encode($message);
@@ -97,4 +98,6 @@ if (empty($billId) || empty($empId) || empty($amtPending)) {
         echo json_encode($message);
     }
 }
+
+return;
 ?>
